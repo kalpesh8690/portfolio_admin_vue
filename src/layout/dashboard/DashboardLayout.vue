@@ -10,7 +10,7 @@
         <sidebar-link
           to="/experience"
           name="Experience"
-          icon="tim-icons icon-briefcase-24"
+          icon="tim-icons icon-user-run"
         />
         <sidebar-link
           to="/education"
@@ -36,6 +36,11 @@
           to="/skills"
           name="Skills"
           icon="tim-icons icon-settings"
+        />
+        <sidebar-link
+          to="/certificates"
+          name="Certificates"
+          icon="tim-icons icon-badge"
         />
       </template>
     </side-bar>

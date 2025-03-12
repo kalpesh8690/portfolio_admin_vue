@@ -17,6 +17,8 @@ const Projects = () =>
   import(/* webpackChunkName: "projects" */ "@/pages/Projects.vue");
 const Skills = () =>
   import(/* webpackChunkName: "skills" */ "@/pages/Skills.vue");
+const Certificates = () =>
+  import(/* webpackChunkName: "certificates" */ "@/pages/Certificates.vue");
 
 const routes = [
   {
@@ -58,6 +60,11 @@ const routes = [
         path: "skills",
         name: "skills",
         component: Skills,
+      },
+      {
+        path: "certificates",
+        name: "certificates",
+        component: Certificates,
       }
     ],
   },
