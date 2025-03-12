@@ -6,7 +6,12 @@
         No work experience records found.
       </div>
       <div v-else class="experience-items">
-        <div v-for="(experience, index) in experienceList" :key="index" class="experience-item">
+        <div 
+          v-for="(experience, index) in experienceList" 
+          :key="index" 
+          class="experience-item searchable-item"
+          :data-id="experience.id || experience.companyName"
+          :data-name="experience.companyName">
           <div class="experience-content">
             <div class="experience-header">
               <h4 class="position">{{ experience.position }}</h4>
@@ -39,8 +44,11 @@
 </template>
 
 <script>
+import searchHighlight from '@/mixins/searchHighlight';
+
 export default {
   name: 'experience-list',
+  mixins: [searchHighlight],
   props: {
     experienceList: {
       type: Array,
@@ -76,10 +84,32 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  transition: all 0.3s ease;
 }
 
 .experience-item:last-child {
   border-bottom: none;
+}
+
+.experience-item.search-highlight {
+  background-color: #ff9800;
+  border-radius: 8px;
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(255, 152, 0, 0.2);
+}
+
+.experience-item.search-highlight .position,
+.experience-item.search-highlight .company-name,
+.experience-item.search-highlight .location,
+.experience-item.search-highlight .employment-type,
+.experience-item.search-highlight .date,
+.experience-item.search-highlight .description,
+.experience-item.search-highlight .technologies {
+  color: white;
+}
+
+.experience-item.search-highlight .technologies strong {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .experience-content {

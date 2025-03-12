@@ -9,7 +9,12 @@
         <div v-for="(certificates, category) in groupedCertificates" :key="category" class="certificate-category">
           <h4 class="category-title">{{ category }}</h4>
           <div class="certificate-items">
-            <div v-for="(certificate, index) in certificates" :key="index" class="certificate-item">
+            <div 
+              v-for="(certificate, index) in certificates" 
+              :key="index" 
+              class="certificate-item searchable-item"
+              :data-id="certificate.id || certificate.name"
+              :data-name="certificate.name">
               <div class="certificate-content">
                 <div class="certificate-header">
                   <h5 class="certificate-name">{{ certificate.name }}</h5>
@@ -56,8 +61,11 @@
 </template>
 
 <script>
+import searchHighlight from '@/mixins/searchHighlight';
+
 export default {
   name: 'certificate-list',
+  mixins: [searchHighlight],
   props: {
     certificateList: {
       type: Array,
@@ -113,14 +121,52 @@ export default {
 }
 
 .certificate-item {
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  padding: 15px;
+  border-bottom: 1px solid #e9ecef;
+  padding: 20px;
   margin-bottom: 15px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.certificate-item.search-highlight {
+  background-color: #ff9800;
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(255, 152, 0, 0.2);
+}
+
+.certificate-item.search-highlight .certificate-name,
+.certificate-item.search-highlight .issuer-badge,
+.certificate-item.search-highlight .certificate-dates,
+.certificate-item.search-highlight .description,
+.certificate-item.search-highlight .credential-id,
+.certificate-item.search-highlight .credential-url {
+  color: white;
+}
+
+.certificate-item.search-highlight .issuer-badge {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.certificate-item.search-highlight .certificate-details {
+  border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+.certificate-item.search-highlight strong {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.certificate-item.search-highlight .credential-url a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: underline;
+}
+
+.certificate-item.search-highlight .credential-url a:hover {
+  color: white;
 }
 
 .certificate-content {

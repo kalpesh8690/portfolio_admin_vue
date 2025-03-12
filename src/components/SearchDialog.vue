@@ -118,11 +118,28 @@ export default {
       'clearSearch'
     ]),
     async handleSearch() {
-      if (!this.searchQuery.trim()) {
-        this.clearSearch();
-        return;
+      // Clear timeout if it exists
+      if (this.searchTimeout) {
+        clearTimeout(this.searchTimeout);
       }
-      await this.performSearch(this.searchQuery.trim());
+
+      // Set a new timeout to debounce the search
+      this.searchTimeout = setTimeout(async () => {
+        console.log('Search input:', this.searchQuery);
+        if (!this.searchQuery?.trim()) {
+          this.clearSearch();
+          return;
+        }
+        try {
+          await this.performSearch(this.searchQuery.trim());
+        } catch (error) {
+          console.error('Error performing search:', error);
+          this.$notify({
+            type: 'danger',
+            message: 'An error occurred while searching. Please try again.'
+          });
+        }
+      }, 300); // 300ms debounce
     },
     formatSectionName(name) {
       return name.charAt(0).toUpperCase() + name.slice(1);
@@ -132,13 +149,79 @@ export default {
       return text.length > length ? text.slice(0, length) + '...' : text;
     },
     navigateToItem(item, section) {
-      this.$router.push({ 
-        name: this.formatSectionName(section),
-        params: { id: item.id }
-      });
-      this.closeDialog();
+      console.log('Navigating to:', { item, section });
+      
+      // Map section names to route names (all lowercase as defined in routes.js)
+      const routeMap = {
+        skills: 'skills',
+        certificates: 'certificates',
+        education: 'education',
+        experience: 'experience',
+        projects: 'projects',
+        profile: 'profile'
+      };
+
+      const routeName = routeMap[section.toLowerCase()];
+      if (!routeName) {
+        console.error('Unknown section:', section);
+        return;
+      }
+
+      // Create unique identifier for the item
+      const itemId = item.id || 
+        item.skillName || 
+        item.name || 
+        item.degree || 
+        item.companyName || 
+        item.projectName;
+
+      // Create the route object with both query parameters
+      const route = {
+        name: routeName,
+        query: {
+          highlight: itemId, // Add highlight parameter
+          search: this.searchQuery, // Add search term
+          _t: Date.now() // Add timestamp to force route change
+        }
+      };
+
+      console.log('Navigating to route:', route);
+      
+      // If we're already on the same route, force a reload of the component
+      if (this.$route.name === routeName) {
+        // Remove highlight from any previously highlighted elements
+        const highlighted = document.querySelectorAll('.search-highlight');
+        highlighted.forEach(el => el.classList.remove('search-highlight'));
+        
+        // Force component reload by changing the timestamp
+        this.$router.replace({
+          ...this.$route,
+          query: {
+            ...route.query,
+            _t: Date.now()
+          }
+        }).then(() => {
+          this.closeDialog();
+        });
+      } else {
+        // Navigate to new route
+        this.$router.push(route)
+          .then(() => {
+            this.closeDialog();
+          })
+          .catch(err => {
+            console.error('Navigation error:', err);
+            this.$router.push({ name: routeName }).then(() => {
+              this.closeDialog();
+            });
+          });
+      }
     },
     closeDialog() {
+      if (this.searchTimeout) {
+        clearTimeout(this.searchTimeout);
+      }
+      this.clearSearch();
       this.$emit('close');
     },
     getSectionIcon(section) {
@@ -152,6 +235,16 @@ export default {
       return icons[section] || 'tim-icons icon-paper';
     },
   },
+  data() {
+    return {
+      searchTimeout: null
+    };
+  },
+  beforeDestroy() {
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+  }
 };
 </script>
 
@@ -367,5 +460,24 @@ export default {
   to {
     transform: rotate(360deg);
   }
+}
+
+@keyframes highlightAnimation {
+  0% {
+    background-color: rgba(225, 78, 202, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    background-color: rgba(225, 78, 202, 0.1);
+    transform: scale(1.02);
+  }
+  100% {
+    background-color: transparent;
+    transform: scale(1);
+  }
+}
+
+:global(.search-highlight) {
+  animation: highlightAnimation 2s ease-out;
 }
 </style> 

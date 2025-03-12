@@ -18,58 +18,75 @@ const mutations = {
 
 const actions = {
   async performSearch({ commit, rootState }, query) {
+    if (!query) return;
+    
     commit('SET_SEARCH_QUERY', query);
     commit('SET_IS_SEARCHING', true);
+    console.log('Performing search with query:', query);
 
     try {
       const results = [];
+      const searchQuery = query.toLowerCase();
       
+      // Debug state access
+      console.log('Accessing state data:', {
+        skills: rootState.skills?.skillList || [],
+        certificates: rootState.certificates?.certificateList || [],
+        education: rootState.education?.educationList || [],
+        experience: rootState.experience?.experienceList || [],
+        projects: rootState.projects?.projectList || []
+      });
+
       // Search in skills
-      if (rootState.skills.skills) {
-        rootState.skills.skills.forEach(skill => {
-          if (matchesSearch(skill, query)) {
-            results.push({ ...skill, section: 'skills' });
-          }
-        });
-      }
+      const skills = rootState.skills?.skillList || [];
+      console.log('Searching skills:', skills);
+      skills.forEach(skill => {
+        if (matchesSearch(skill, searchQuery)) {
+          results.push({ ...skill, section: 'skills', id: skill.id || skill.skillName });
+        }
+      });
 
       // Search in certificates
-      if (rootState.certificates.certificates) {
-        rootState.certificates.certificates.forEach(cert => {
-          if (matchesSearch(cert, query)) {
-            results.push({ ...cert, section: 'certificates' });
-          }
-        });
-      }
+      const certificates = rootState.certificates?.certificateList || [];
+      console.log('Searching certificates:', certificates);
+      certificates.forEach(cert => {
+        if (matchesSearch(cert, searchQuery)) {
+          results.push({ ...cert, section: 'certificates', id: cert.id || cert.name });
+        }
+      });
 
       // Search in education
-      if (rootState.education.education) {
-        rootState.education.education.forEach(edu => {
-          if (matchesSearch(edu, query)) {
-            results.push({ ...edu, section: 'education' });
-          }
-        });
-      }
+      const education = rootState.education?.educationList || [];
+      console.log('Searching education:', education);
+      education.forEach(edu => {
+        if (matchesSearch(edu, searchQuery)) {
+          results.push({ ...edu, section: 'education', id: edu.id || edu.institution });
+        }
+      });
 
       // Search in experience
-      if (rootState.experience.experience) {
-        rootState.experience.experience.forEach(exp => {
-          if (matchesSearch(exp, query)) {
-            results.push({ ...exp, section: 'experience' });
-          }
-        });
-      }
+      const experience = rootState.experience?.experienceList || [];
+      console.log('Searching experience:', experience);
+      experience.forEach(exp => {
+        if (matchesSearch(exp, searchQuery)) {
+          results.push({ ...exp, section: 'experience', id: exp.id || exp.companyName });
+        }
+      });
 
       // Search in projects
-      if (rootState.projects.projects) {
-        rootState.projects.projects.forEach(project => {
-          if (matchesSearch(project, query)) {
-            results.push({ ...project, section: 'projects' });
-          }
-        });
-      }
+      const projects = rootState.projects?.projectList || [];
+      console.log('Searching projects:', projects);
+      projects.forEach(project => {
+        if (matchesSearch(project, searchQuery)) {
+          results.push({ ...project, section: 'projects', id: project.id || project.projectName });
+        }
+      });
 
+      console.log('Search results:', results);
       commit('SET_SEARCH_RESULTS', results);
+    } catch (error) {
+      console.error('Search error:', error);
+      commit('SET_SEARCH_RESULTS', []);
     } finally {
       commit('SET_IS_SEARCHING', false);
     }
@@ -96,10 +113,38 @@ const getters = {
 
 // Helper function to match search query
 function matchesSearch(item, query) {
-  const searchQuery = query.toLowerCase();
-  return Object.values(item).some(value => 
-    value && value.toString().toLowerCase().includes(searchQuery)
-  );
+  if (!item || !query) return false;
+
+  // Convert item to searchable string
+  const searchableFields = [
+    item.name,
+    item.skillName,
+    item.title,
+    item.description,
+    item.company,
+    item.companyName,
+    item.degree,
+    item.institution,
+    item.issuer,
+    item.technologies,
+    item.skills,
+    item.projectName,
+    item.fieldOfStudy,
+    item.category
+  ];
+
+  const searchableText = searchableFields
+    .filter(field => field) // Remove undefined/null values
+    .map(field => {
+      if (Array.isArray(field)) {
+        return field.join(' ');
+      }
+      return field.toString();
+    })
+    .join(' ')
+    .toLowerCase();
+
+  return searchableText.includes(query.toLowerCase());
 }
 
 export default {

@@ -9,7 +9,7 @@
         <div v-for="(skills, category) in groupedSkills" :key="category" class="skill-category">
           <h4 class="category-title">{{ category }}</h4>
           <div class="skill-items">
-            <div v-for="(skill, index) in skills" :key="index" class="skill-item">
+            <div v-for="(skill, index) in skills" :key="index" class="skill-item searchable-item" :data-id="skill.id || skill.skillName" :data-name="skill.skillName" :id="skill.id || skill.skillName">
               <div class="skill-content">
                 <div class="skill-header">
                   <h5 class="skill-name">{{ skill.skillName }}</h5>
@@ -46,8 +46,11 @@
 </template>
 
 <script>
+import searchHighlight from '@/mixins/searchHighlight';
+
 export default {
   name: 'skill-list',
+  mixins: [searchHighlight],
   props: {
     skillList: {
       type: Array,
@@ -157,5 +160,32 @@ export default {
   text-align: center;
   padding: 20px;
   color: #666;
+}
+
+.search-highlight {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #e14eca;
+    border-radius: 8px;
+    animation: highlightBorder 2s ease-out;
+  }
+}
+
+@keyframes highlightBorder {
+  0% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
 }
 </style> 
