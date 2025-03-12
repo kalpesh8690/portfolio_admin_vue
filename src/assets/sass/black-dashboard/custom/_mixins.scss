@@ -1,0 +1,84 @@
+@use "sass:color";
+@use "sass:math";
+
+@import "mixins/alert.scss";
+@import "mixins/badges.scss";
+@import "mixins/background-variant.scss";
+@import "mixins/buttons.scss";
+@import "mixins/forms.scss";
+@import "mixins/icon.scss";
+@import "mixins/modals.scss";
+@import "mixins/popovers.scss";
+@import "mixins/page-header.scss";
+@import "mixins/vendor-prefixes.scss";
+@import "mixins/opacity.scss";
+@import "mixins/modals.scss";
+@import "mixins/inputs.scss";
+@import "mixins/dropdown.scss";
+@import "mixins/wizard.scss";
+
+@mixin diagonal-gradient($start-color, $end-color) {
+  background: $start-color;
+  background: linear-gradient(to bottom left, $start-color, $end-color, $start-color);
+}
+
+@mixin dropdown-colors($brand-color, $dropdown-header-color, $dropdown-color, $background-color) {
+  background-color: $brand-color;
+
+  &:before {
+    color: $brand-color;
+  }
+
+  .dropdown-header:not([href]):not([tabindex]) {
+    color: $dropdown-header-color;
+  }
+
+  .dropdown-item {
+    color: $dropdown-color;
+
+    &:hover,
+    &:focus {
+      background-color: color.adjust($background-color, $alpha: 0.2);
+    }
+  }
+
+  .dropdown-divider {
+    background-color: color.adjust($background-color, $alpha: 0.2);
+  }
+}
+
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  // IE8 filter
+  $opacity-ie: ($opacity * 100);
+  filter: #{alpha(opacity=$opacity-ie)};
+}
+
+@mixin transitions($time, $type) {
+  -webkit-transition: all $time $type;
+  -moz-transition: all $time $type;
+  -o-transition: all $time $type;
+  -ms-transition: all $time $type;
+  transition: all $time $type;
+}
+
+@mixin transform-translate-y($value) {
+  -webkit-transform: translate3d(0, $value, 0);
+  -moz-transform: translate3d(0, $value, 0);
+  -o-transform: translate3d(0, $value, 0);
+  -ms-transform: translate3d(0, $value, 0);
+  transform: translate3d(0, $value, 0);
+}
+
+@mixin transform-translate-x($value) {
+  -webkit-transform: translate3d($value, 0, 0);
+  -moz-transform: translate3d($value, 0, 0);
+  -o-transform: translate3d($value, 0, 0);
+  -ms-transform: translate3d($value, 0, 0);
+  transform: translate3d($value, 0, 0);
+}
+
+@mixin icon-gradient($color) {
+  background: $color;
+  background: linear-gradient(to bottom left, $color, color.adjust($color, $lightness: 10%));
+}
