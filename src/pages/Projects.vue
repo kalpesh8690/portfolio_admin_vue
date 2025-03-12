@@ -44,6 +44,7 @@
 <script>
 import EditProjectForm from './Projects/EditProjectForm.vue'
 import ProjectList from './Projects/ProjectList.vue'
+import { projectsData } from '@/data/demoData'
 
 export default {
   name: 'project-manager',
@@ -103,6 +104,10 @@ export default {
     const savedProjects = localStorage.getItem('projectList')
     if (savedProjects) {
       this.projectList = JSON.parse(savedProjects)
+    } else {
+      // Load demo data if no data exists
+      this.projectList = projectsData
+      this.saveToLocalStorage()
     }
   }
 }

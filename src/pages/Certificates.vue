@@ -44,6 +44,7 @@
 <script>
 import EditCertificateForm from './Certificates/EditCertificateForm.vue'
 import CertificateList from './Certificates/CertificateList.vue'
+import { certificatesData } from '@/data/demoData'
 
 export default {
   name: 'certificate-manager',
@@ -104,6 +105,10 @@ export default {
     const savedCertificates = localStorage.getItem('certificateList')
     if (savedCertificates) {
       this.certificateList = JSON.parse(savedCertificates)
+    } else {
+      // Load demo data if no data exists
+      this.certificateList = certificatesData
+      this.saveToLocalStorage()
     }
   }
 }

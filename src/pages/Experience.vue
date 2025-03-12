@@ -44,6 +44,7 @@
 <script>
 import EditExperienceForm from './Experience/EditExperienceForm.vue';
 import ExperienceList from './Experience/ExperienceList.vue';
+import { experienceData } from '@/data/demoData';
 
 export default {
   name: 'experience-page',
@@ -130,6 +131,10 @@ export default {
     const savedExperience = localStorage.getItem('experienceList');
     if (savedExperience) {
       this.experienceList = JSON.parse(savedExperience);
+    } else {
+      // Load demo data if no data exists
+      this.experienceList = experienceData;
+      this.saveToLocalStorage();
     }
   }
 };

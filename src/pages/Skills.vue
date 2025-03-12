@@ -44,6 +44,7 @@
 <script>
 import EditSkillForm from './Skills/EditSkillForm.vue'
 import SkillList from './Skills/SkillList.vue'
+import { skillsData } from '@/data/demoData'
 
 export default {
   name: 'skill-manager',
@@ -110,6 +111,10 @@ export default {
     const savedSkills = localStorage.getItem('skillList')
     if (savedSkills) {
       this.skillList = JSON.parse(savedSkills)
+    } else {
+      // Load demo data if no data exists
+      this.skillList = skillsData
+      this.saveToLocalStorage()
     }
   }
 }

@@ -39,6 +39,7 @@
 <script>
 import EditEducationForm from './Education/EditEducationForm.vue';
 import EducationList from './Education/EducationList.vue';
+import { educationData } from '@/data/demoData';
 
 export default {
   name: 'education-page',
@@ -85,10 +86,13 @@ export default {
     }
   },
   created() {
-    // Load education data from localStorage
-    const savedEducation = localStorage.getItem('educationList');
+    const savedEducation = localStorage.getItem('educationList')
     if (savedEducation) {
-      this.educationList = JSON.parse(savedEducation);
+      this.educationList = JSON.parse(savedEducation)
+    } else {
+      // Load demo data if no data exists
+      this.educationList = educationData
+      this.saveToLocalStorage()
     }
   },
   watch: {
