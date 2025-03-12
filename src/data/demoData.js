@@ -1,5 +1,26 @@
 // Demo data for the portfolio admin dashboard
 
+export const profileData = {
+  firstName: "John",
+  lastName: "Doe",
+  title: "Senior Software Engineer",
+  email: "john.doe@example.com",
+  phone: "+1 (555) 123-4567",
+  location: "San Francisco, CA",
+  website: "https://johndoe.dev",
+  github: "https://github.com/johndoe",
+  linkedin: "https://linkedin.com/in/johndoe",
+  bio: "Experienced software engineer with a passion for building scalable web applications and mentoring junior developers. Specialized in full-stack development with expertise in modern JavaScript frameworks and cloud technologies.",
+  avatar: "https://kalpeshchauhan.vercel.app/mypic.png",
+  availability: "Open to opportunities",
+  interests: [
+    "Cloud Computing",
+    "Web Development",
+    "Open Source",
+    "Tech Mentoring"
+  ]
+}
+
 export const skillsData = [
   {
     skillName: "Vue.js",

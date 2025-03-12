@@ -163,95 +163,62 @@
         </base-card>
       </div>
     </div>
+
+    <!-- Education Section -->
+    <div class="row">
+      <div class="col-12">
+        <base-card>
+          <h4 slot="header" class="card-title">Latest Education</h4>
+          <div class="education-timeline">
+            <div v-for="edu in educationByDate" :key="edu.institution" class="education-item">
+              <div class="education-header">
+                <h5>{{ edu.degree }}</h5>
+                <span class="institution">{{ edu.institution }}</span>
+              </div>
+              <div class="education-details">
+                <p class="field">{{ edu.fieldOfStudy }}</p>
+                <p class="duration">{{ formatDate(edu.startDate) }} - {{ formatDate(edu.endDate) }}</p>
+                <p class="description" v-if="edu.description">{{ edu.description }}</p>
+              </div>
+            </div>
+          </div>
+        </base-card>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'portfolio-dashboard',
-  data() {
-    return {
-      experienceList: [],
-      certificateList: [],
-      projectList: [],
-      skillList: [],
-      educationList: []
-    }
-  },
   computed: {
-    // Experience Stats
-    experienceCount() {
-      return this.experienceList.length
-    },
-    totalYearsExperience() {
-      if (this.experienceList.length === 0) return 'No experience'
-      
-      let totalMonths = 0
-      this.experienceList.forEach(exp => {
-        const start = new Date(exp.startDate)
-        const end = exp.endDate ? new Date(exp.endDate) : new Date()
-        totalMonths += (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth()
-      })
-      
-      const years = Math.floor(totalMonths / 12)
-      const months = totalMonths % 12
-      
-      if (years === 0) return `${months} months`
-      if (months === 0) return `${years} years`
-      return `${years} years ${months} months`
-    },
-    currentPosition() {
-      return this.experienceList[0]
-    },
-
-    // Certificate Stats
-    certificateCount() {
-      return this.certificateList.length
-    },
-    latestCertificate() {
-      if (this.certificateList.length === 0) return 'No certificates'
-      const sorted = [...this.certificateList].sort((a, b) => 
-        new Date(b.issueDate) - new Date(a.issueDate)
-      )
-      return sorted[0].name
-    },
-    latestCertificates() {
-      return [...this.certificateList]
-        .sort((a, b) => new Date(b.issueDate) - new Date(a.issueDate))
-        .slice(0, 3)
-    },
-
-    // Project Stats
-    projectCount() {
-      return this.projectList.length
-    },
-    activeProjectCount() {
-      return this.projectList.filter(project => !project.endDate).length
-    },
-    latestProjects() {
-      return [...this.projectList]
-        .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
-        .slice(0, 5)
-    },
-
-    // Skill Stats
-    skillCount() {
-      return this.skillList.length
-    },
-    topSkillCategory() {
-      if (this.skillList.length === 0) return 'No skills'
-      const categories = this.skillList.reduce((acc, skill) => {
-        acc[skill.category] = (acc[skill.category] || 0) + 1
-        return acc
-      }, {})
-      const sorted = Object.entries(categories).sort((a, b) => b[1] - a[1])
-      return sorted[0][0]
-    },
-    topSkills() {
-      return [...this.skillList]
-        .sort((a, b) => b.proficiency - a.proficiency)
-        .slice(0, 5)
-    }
+    ...mapGetters('experience', [
+      'experienceCount',
+      'totalYearsExperience',
+      'currentPosition'
+    ]),
+    ...mapGetters('certificates', [
+      'certificateCount',
+      'latestCertificate',
+      'latestCertificates'
+    ]),
+    ...mapGetters('projects', [
+      'projectCount',
+      'activeProjectCount',
+      'latestProjects'
+    ]),
+    ...mapGetters('skills', [
+      'skillCount',
+      'topSkillCategory',
+      'topSkills'
+    ]),
+    ...mapGetters('education', [
+      'educationCount',
+      'latestEducation',
+      'educationByDate'
+    ])
   },
   methods: {
     formatDate(dateString) {
@@ -274,20 +241,6 @@ export default {
       if (remainingMonths === 0) return `${years} years`
       return `${years} years ${remainingMonths} months`
     }
-  },
-  created() {
-    // Load all data from localStorage
-    const savedExperience = localStorage.getItem('experienceList')
-    const savedCertificates = localStorage.getItem('certificateList')
-    const savedProjects = localStorage.getItem('projectList')
-    const savedSkills = localStorage.getItem('skillList')
-    const savedEducation = localStorage.getItem('educationList')
-
-    this.experienceList = savedExperience ? JSON.parse(savedExperience) : []
-    this.certificateList = savedCertificates ? JSON.parse(savedCertificates) : []
-    this.projectList = savedProjects ? JSON.parse(savedProjects) : []
-    this.skillList = savedSkills ? JSON.parse(savedSkills) : []
-    this.educationList = savedEducation ? JSON.parse(savedEducation) : []
   }
 }
 </script>
@@ -443,5 +396,53 @@ export default {
 
 .icon-info {
   color: #1d8cf8;
+}
+
+.education-timeline {
+  padding: 20px 0;
+}
+
+.education-item {
+  padding: 20px;
+  margin-bottom: 20px;
+  border-left: 3px solid #e14eca;
+  background-color: rgba(225, 78, 202, 0.05);
+  border-radius: 0 8px 8px 0;
+}
+
+.education-item:last-child {
+  margin-bottom: 0;
+}
+
+.education-header {
+  margin-bottom: 15px;
+}
+
+.education-header h5 {
+  color: #333;
+  margin: 0 0 5px 0;
+}
+
+.institution {
+  color: #666;
+  font-weight: 600;
+}
+
+.education-details .field {
+  color: #333;
+  margin: 5px 0;
+}
+
+.education-details .duration {
+  color: #9A9A9A;
+  font-size: 0.9em;
+  margin: 5px 0;
+}
+
+.education-details .description {
+  color: #666;
+  font-size: 0.95em;
+  margin: 10px 0 0 0;
+  line-height: 1.5;
 }
 </style>

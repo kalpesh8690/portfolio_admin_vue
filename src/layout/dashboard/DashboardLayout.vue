@@ -42,6 +42,13 @@
           name="Certificates"
           icon="tim-icons icon-badge"
         />
+        <sidebar-item
+          :link="{
+            name: 'profile',
+            icon: 'tim-icons icon-single-02',
+            title: 'Profile'
+          }"
+        />
       </template>
     </side-bar>
     <div class="main-panel">

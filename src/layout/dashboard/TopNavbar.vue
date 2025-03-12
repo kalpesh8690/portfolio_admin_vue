@@ -85,14 +85,20 @@
             >
               <template slot="title">
                 <div class="photo">
-                  <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="Profile" />
+                  <img :src="profile.avatar" :alt="fullName" />
                 </div>
                 <b class="caret d-none d-lg-block d-xl-block"></b>
-                <p class="d-lg-none">Profile</p>
+                <p class="d-lg-none">{{ fullName }}</p>
               </template>
-              <a href="#/profile" class="dropdown-item">
+              <div class="dropdown-header">
+                <div class="profile-info">
+                  <h6>{{ fullName }}</h6>
+                  <p>{{ profile.title }}</p>
+                </div>
+              </div>
+              <router-link to="/profile" class="dropdown-item">
                 <i class="tim-icons icon-single-02"></i> My Profile
-              </a>
+              </router-link>
               <a href="#" class="dropdown-item">
                 <i class="tim-icons icon-settings-gear-63"></i> Settings
               </a>
@@ -130,6 +136,7 @@
 <script>
 import { CollapseTransition } from "vue2-transitions";
 import Modal from "@/components/Modal";
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -137,6 +144,10 @@ export default {
     Modal,
   },
   computed: {
+    ...mapGetters('profile', [
+      'fullName',
+      'profile'
+    ]),
     routeName() {
       const { name } = this.$route;
       return this.capitalizeFirstLetter(name);
@@ -194,6 +205,25 @@ export default {
     .dropdown-item {
       i {
         margin-right: 10px;
+      }
+    }
+
+    .dropdown-header {
+      padding: 10px 15px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      
+      .profile-info {
+        h6 {
+          margin: 0;
+          color: #222a42;
+          font-weight: 600;
+        }
+        
+        p {
+          margin: 0;
+          font-size: 0.8em;
+          color: #9A9A9A;
+        }
       }
     }
   }
