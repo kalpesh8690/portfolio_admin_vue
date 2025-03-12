@@ -11,7 +11,7 @@ export const profileData = {
   github: "https://github.com/johndoe",
   linkedin: "https://linkedin.com/in/johndoe",
   bio: "Experienced software engineer with a passion for building scalable web applications and mentoring junior developers. Specialized in full-stack development with expertise in modern JavaScript frameworks and cloud technologies.",
-  avatar: "https://kalpeshchauhan.vercel.app/mypic.png",
+  avatar: "https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671142.jpg?t=st=1741821934~exp=1741825534~hmac=4655b5d0c3892ca21e12cc88f558a501a6c17e74f6f6ed67c1d7ec56a763f6d7&w=900",
   availability: "Open to opportunities",
   interests: [
     "Cloud Computing",

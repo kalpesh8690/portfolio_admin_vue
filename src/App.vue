@@ -1,18 +1,14 @@
 <template>
   <div>
-    <ThemeToggle class="theme-toggle-position" />
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-import ThemeToggle from './components/ThemeToggle.vue'
 
 export default {
   name: "App",
-  components: {
-    ThemeToggle
-  }
+  
 };
 </script>
 
