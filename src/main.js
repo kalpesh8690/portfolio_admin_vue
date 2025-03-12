@@ -6,6 +6,7 @@ import App from "./App.vue";
 import store from "./store";
 import router from "./router/index";
 import "./registerServiceWorker";
+import '@fortawesome/fontawesome-free/css/all.css'
 
 // Use plugins
 Vue.use(BlackDashboard);

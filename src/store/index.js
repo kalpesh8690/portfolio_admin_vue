@@ -7,6 +7,7 @@ import skills from './modules/skills'
 import education from './modules/education'
 import profile from './modules/profile'
 import search from './modules/search'
+import theme from './modules/theme'
 import createDemoDataPlugin from './plugins/demoDataPlugin'
 
 Vue.use(Vuex)
@@ -20,7 +21,8 @@ const store = new Vuex.Store({
     skills,
     education,
     profile,
-    search
+    search,
+    theme
   },
   plugins: [createDemoDataPlugin()]
 })
@@ -32,5 +34,6 @@ store.dispatch('projects/loadProjects')
 store.dispatch('skills/loadSkills')
 store.dispatch('education/loadEducation')
 store.dispatch('profile/loadProfile')
+store.dispatch('theme/initTheme')
 
 export default store 
