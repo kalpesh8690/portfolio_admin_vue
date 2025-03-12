@@ -42,34 +42,27 @@
           name="Certificates"
           icon="tim-icons icon-badge"
         />
-        <sidebar-item
-          :link="{
-            name: 'profile',
-            icon: 'tim-icons icon-single-02',
-            title: 'Profile'
-          }"
-        />
       </template>
     </side-bar>
     <div class="main-panel">
       <top-navbar></top-navbar>
-
-      <dashboard-content @click.native="toggleSidebar"> </dashboard-content>
-
+      <div class="content">
+        <router-view></router-view>
+      </div>
       <content-footer></content-footer>
     </div>
   </div>
 </template>
-<style lang="scss"></style>
+
 <script>
 import TopNavbar from "./TopNavbar";
 import ContentFooter from "./ContentFooter.vue";
-import DashboardContent from "./Content.vue";
+
 export default {
+  name: 'DashboardLayout',
   components: {
     TopNavbar,
     ContentFooter,
-    DashboardContent,
   },
   methods: {
     toggleSidebar() {
@@ -80,3 +73,13 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.content {
+  padding: 20px;
+  
+  .mb-4 {
+    margin-bottom: 1.5rem;
+  }
+}
+</style>

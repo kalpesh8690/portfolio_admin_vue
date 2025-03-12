@@ -6,6 +6,7 @@ import projects from './modules/projects'
 import skills from './modules/skills'
 import education from './modules/education'
 import profile from './modules/profile'
+import search from './modules/search'
 import createDemoDataPlugin from './plugins/demoDataPlugin'
 
 Vue.use(Vuex)
@@ -18,7 +19,8 @@ const store = new Vuex.Store({
     projects,
     skills,
     education,
-    profile
+    profile,
+    search
   },
   plugins: [createDemoDataPlugin()]
 })

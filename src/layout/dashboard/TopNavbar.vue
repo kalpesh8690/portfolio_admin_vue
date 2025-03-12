@@ -40,11 +40,10 @@
         <div class="collapse navbar-collapse show" v-show="showMenu">
           <ul class="navbar-nav ml-auto">
             <!-- Search -->
-            <li class="search-bar input-group">
+            <li class="search-bar input-group" @click="toggleSearchDialog">
               <button
                 class="btn btn-link"
                 id="search-button"
-                @click="searchModalVisible = true"
               >
                 <i class="tim-icons icon-zoom-split"></i>
                 <span class="d-lg-none d-md-block">Search</span>
@@ -112,36 +111,20 @@
       </collapse-transition>
     </div>
 
-    <!-- Search Modal -->
-    <modal
-      :show.sync="searchModalVisible"
-      class="modal-search"
-      id="searchModal"
-      :centered="false"
-      :show-close="true"
-    >
-      <input
-        slot="header"
-        v-model="searchQuery"
-        type="text"
-        class="form-control"
-        id="inlineFormInputGroup"
-        placeholder="SEARCH"
-        @keyup.enter="performSearch"
-      />
-    </modal>
+    <!-- Search Dialog -->
+    <search-dialog :show="showSearchDialog" @close="closeSearchDialog" />
   </nav>
 </template>
 
 <script>
 import { CollapseTransition } from "vue2-transitions";
-import Modal from "@/components/Modal";
 import { mapGetters } from 'vuex';
+import SearchDialog from '@/components/SearchDialog.vue';
 
 export default {
   components: {
     CollapseTransition,
-    Modal,
+    SearchDialog,
   },
   computed: {
     ...mapGetters('profile', [
@@ -157,8 +140,7 @@ export default {
     return {
       activeNotifications: false,
       showMenu: false,
-      searchModalVisible: false,
-      searchQuery: "",
+      showSearchDialog: false,
     };
   },
   methods: {
@@ -174,11 +156,11 @@ export default {
     toggleMenu() {
       this.showMenu = !this.showMenu;
     },
-    performSearch() {
-      // Implement search functionality
-      console.log('Searching for:', this.searchQuery);
-      this.searchModalVisible = false;
-      this.searchQuery = '';
+    toggleSearchDialog() {
+      this.showSearchDialog = true;
+    },
+    closeSearchDialog() {
+      this.showSearchDialog = false;
     }
   },
 };
@@ -240,33 +222,20 @@ export default {
   }
 }
 
-.modal-search {
-  .modal-dialog {
-    max-width: 100%;
-    margin: 0;
-    margin-top: 0;
-  }
-
-  .modal-content {
-    background-color: transparent;
-    border: none;
-  }
-
-  .modal-header {
-    padding: 0;
-    border: none;
-
-    input {
-      padding: 20px;
-      font-size: 24px;
-      background: rgba(255, 255, 255, 0.95);
-      border: none;
-      border-radius: 0;
-
-      &:focus {
-        box-shadow: none;
-        border: none;
-      }
+.search-bar {
+  margin-right: 1rem;
+  
+  .btn-link {
+    color: inherit;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    
+    &:hover {
+      color: #42b983;
+    }
+    
+    i {
+      vertical-align: middle;
     }
   }
 }
