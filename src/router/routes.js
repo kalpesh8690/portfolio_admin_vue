@@ -1,6 +1,7 @@
 import DashboardLayout from "@/layout/dashboard/DashboardLayout.vue";
 // GeneralViews
 import NotFound from "@/pages/NotFoundPage.vue";
+import LoginPage from "@/pages/Login.vue";
 
 // Admin pages
 const Dashboard = () =>
@@ -22,9 +23,16 @@ const Certificates = () =>
 
 const routes = [
   {
+    path: "/login",
+    name: "login",
+    component: LoginPage,
+    meta: { public: true }
+  },
+  {
     path: "/",
     component: DashboardLayout,
     redirect: "/dashboard",
+    meta: { requiresAuth: true },
     children: [
       {
         path: "dashboard",
