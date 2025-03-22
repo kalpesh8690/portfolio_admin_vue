@@ -2,6 +2,7 @@
   position: relative;
   top: 0;
   height: 100vh;
+  overflow-x: hidden;
 
   &.wrapper-full-page {
     min-height: 100vh;
@@ -30,7 +31,13 @@
   margin-top: 80px;
   margin-left: 20px;
   border-radius: 15px;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, margin-left 0.3s ease;
+  transform-origin: 0 0;
+
+  &.collapsed {
+    transform: translateX(-230px);
+    margin-left: 0;
+  }
 
   .sidebar-wrapper {
     width: 100%;
@@ -386,7 +393,16 @@
     }
   }
 
-  transition: 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
+  @media screen and (max-width: 991px) {
+    margin-left: 0;
+    margin-top: 60px;
+    width: 230px;
+    transform: translateX(-230px);
+
+    &.show {
+      transform: translateX(0);
+    }
+  }
 }
 
 .visible-on-sidebar-regular {
@@ -412,32 +428,28 @@
 .main-panel {
   position: relative;
   float: right;
-  width: $full-width;
+  width: calc(100% - 290px);
   min-height: 100vh;
   border-top: 2px solid $primary;
   background: linear-gradient($background-black, $background-states-black);
+  transition: width 0.3s ease;
 
-  @include transitions(0.5s, cubic-bezier(0.685, 0.0473, 0.346, 1));
-
-  &[data="blue"] {
-    border-top: 2px solid $info;
+  @media screen and (max-width: 991px) {
+    width: 100%;
   }
 
-  &[data="green"] {
-    border-top: 2px solid $success;
-  }
-
-  &[data="purple"] {
-    border-top: 2px solid $purple;
-  }
-
-  &[data="primary"] {
-    border-top: 2px solid $primary;
+  &.expanded {
+    width: calc(100% - 60px);
   }
 
   > .content {
-    padding: 78px 30px 30px 280px;
+    padding: 78px 30px 30px 30px;
     min-height: calc(100vh - 70px);
+    transition: padding 0.3s ease;
+
+    @media screen and (max-width: 991px) {
+      padding-left: 30px;
+    }
   }
 
   > .navbar {
@@ -770,5 +782,28 @@
     &:after {
       background: rgba(0, 0, 0, 0.05);
     }
+  }
+}
+
+// Overlay for mobile
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1030;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  &.show {
+    display: block;
+    opacity: 1;
+  }
+
+  @media screen and (min-width: 992px) {
+    display: none !important;
   }
 }

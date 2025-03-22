@@ -92,9 +92,9 @@
       <div class="col-lg-8">
         <base-card>
           <h4 slot="header" class="card-title">Latest Projects</h4>
-          <div class="table-responsive">
-            <table class="table tablesorter">
-              <thead class="text-primary">
+          <div class="modern-table-wrapper">
+            <table class="modern-table">
+              <thead>
                 <tr>
                   <th>Project</th>
                   <th>Type</th>
@@ -104,10 +104,22 @@
               </thead>
               <tbody>
                 <tr v-for="project in latestProjects" :key="project.projectName">
-                  <td>{{ project.projectName }}</td>
-                  <td>{{ project.projectType }}</td>
-                  <td>{{ project.endDate ? 'Completed' : 'Active' }}</td>
-                  <td>{{ project.technologies }}</td>
+                  <td>
+                    <div class="project-name">{{ project.projectName }}</div>
+                  </td>
+                  <td>
+                    <span class="project-type">{{ project.projectType }}</span>
+                  </td>
+                  <td>
+                    <span class="status-badge" :class="{ 'status-active': !project.endDate, 'status-completed': project.endDate }">
+                      {{ project.endDate ? 'Completed' : 'Active' }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="tech-stack">
+                      {{ project.technologies }}
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -245,7 +257,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+@use "sass:color";
+
 .card-stats .icon-big {
   font-size: 3em;
   min-height: 64px;
@@ -444,5 +458,93 @@ export default {
   font-size: 0.95em;
   margin: 10px 0 0 0;
   line-height: 1.5;
+}
+
+.modern-table-wrapper {
+  background: rgba(32, 32, 32, 0.9);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  
+  thead {
+    tr {
+      background: transparent;
+    }
+    
+    th {
+      color: #9A9A9A;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.75rem;
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: left;
+    }
+  }
+  
+  tbody {
+    tr {
+      transition: background-color 0.2s ease;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+    }
+    
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+      font-size: 0.875rem;
+      
+      &:first-child {
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.project-name {
+  color: #e14eca;
+  font-weight: 600;
+}
+
+.project-type {
+  color: #9A9A9A;
+  font-size: 0.875rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  
+  &.status-active {
+    background: rgba(0, 242, 195, 0.1);
+    color: #00f2c3;
+  }
+  
+  &.status-completed {
+    background: rgba(29, 140, 248, 0.1);
+    color: #1d8cf8;
+  }
+}
+
+.tech-stack {
+  color: #9A9A9A;
+  font-size: 0.875rem;
+  line-height: 1.4;
 }
 </style>
