@@ -17,28 +17,51 @@
 .sidebar,
 .off-canvas-sidebar {
   @include linear-gradient($primary-states, $primary);
-  height: calc(100vh - 90px);
-  width: 230px;
+  height: calc(100vh - 100px);
+  width: 250px;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 1031;
   background-size: cover;
   background-position: center center;
   display: block;
-  box-shadow: 0px 0px 45px 0px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 45px 0 rgba(0, 0, 0, 0.2);
   margin-top: 80px;
   margin-left: 20px;
-  border-radius: 5px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
 
   .sidebar-wrapper {
-    width: $full-width;
+    width: 100%;
     min-height: 100%;
-    max-height: calc(100vh - 705px);
+    max-height: calc(100vh - 180px);
     z-index: 4;
     position: relative;
-    overflow: auto;
-    background: orange;
+    overflow: hidden;
+
+    &:hover {
+      overflow-y: auto;
+    }
+
+    /* Custom Scrollbar Styles */
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+    }
 
     .dropdown .dropdown-backdrop {
       display: none !important;
@@ -130,110 +153,70 @@
   .nav {
     margin-top: 20px;
     display: block;
-
-    .caret {
-      top: 14px;
-      position: absolute;
-      right: 10px;
-    }
+    padding: 0 15px;
 
     li {
-      > a + div .nav {
-        margin-top: 5px;
-        li > a {
-          margin-top: 0px;
-          padding: 8px 8px;
-        }
-      }
-
       > a {
-        margin: 10px 15px 0;
-        border-radius: $btn-round-radius;
-        color: $white;
+        margin: 10px 0;
+        border-radius: 12px;
+        color: rgba(255, 255, 255, 0.8);
         display: block;
         text-decoration: none;
         position: relative;
         text-transform: uppercase;
         cursor: pointer;
         font-size: $font-size-xs;
-        padding: 10px 8px;
+        padding: 10px 15px;
         line-height: $line-height-lg;
-      }
+        transition: all 0.3s ease;
 
-      &:first-child > a {
-        margin: 0 15px;
-      }
-
-      &:hover:not(.active) > a,
-      &:focus:not(.active) > a {
-        p,
         i {
-          color: $white;
+          font-size: 20px;
+          float: left;
+          margin-right: 12px;
+          line-height: 30px;
+          width: 34px;
+          text-align: center;
+          color: rgba(255, 255, 255, 0.8);
+          position: relative;
         }
-      }
 
-      &:hover:not(.active) > a i,
-      &:focus:not(.active) > a i {
-        color: $white;
-      }
-
-      &.active > a:not([data-toggle="collapse"]) {
-        background: transparent;
-
-        i,
         p {
-          color: white;
+          margin: 0;
+          font-weight: $font-weight-normal;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.8);
+          line-height: 30px;
+          white-space: nowrap;
         }
 
-        &:before {
-          content: " ";
-          position: absolute;
-          height: 6px;
-          width: 6px;
-          top: 22px;
-          left: -4px;
-          background: $white;
-          border-radius: 50%;
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          color: $white;
+
+          i, p {
+            color: $white;
+          }
         }
       }
 
-      &.active > a[data-toggle="collapse"] {
-        background: transparent;
-        box-shadow: none;
-        color: $white;
+      &.active > a {
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.05);
 
-        i {
-          color: $white;
-        }
-
-        & + div .nav .active a {
-          box-shadow: none;
-          .sidebar-mini-icon,
-          .sidebar-normal {
-            color: $white;
-            font-weight: $font-weight-normal;
-          }
-
-          &:before {
-            content: " ";
-            position: absolute;
-            height: 6px;
-            width: 6px;
-            top: 17px;
-            left: -4px;
-            background: $white;
-            border-radius: 50%;
-          }
-        }
         &:before {
-          content: " ";
+          content: "";
           position: absolute;
-          height: 6px;
-          width: 6px;
-          top: 22px;
-          left: -4px;
-          background: rgba($white, 0.6);
-          border-radius: 50%;
+          left: 0;
+          top: 0;
+          height: 100%;
+          width: 4px;
+          background: $white;
+          border-radius: 0 4px 4px 0;
+        }
+
+        i, p {
+          color: $white;
         }
       }
     }
@@ -264,54 +247,33 @@
 
   .logo {
     position: relative;
-    padding: $padding-base-vertical $padding-base-horizontal;
+    padding: 20px 15px;
     z-index: 4;
-
-    a.logo-mini,
-    a.logo-normal {
-      @extend .animation-transition-general;
-    }
 
     a.logo-mini {
       opacity: 1;
       float: left;
       width: 34px;
       text-align: center;
-      margin-left: 12px;
-      margin-right: 10px;
-    }
-
-    a.logo-mini .logo-img {
-      width: 32px;
-      display: inline-block;
-      height: 32px;
-      margin-left: 0;
-      margin-right: 15px;
-      background: #fff;
-      border-radius: 32px;
-      text-align: center;
-      img {
-        max-width: 21px;
-      }
-      &.logo-img-rtl {
-        margin-right: 0;
-      }
+      margin-left: 10px;
+      margin-right: 12px;
     }
 
     a.logo-normal {
       display: block;
       opacity: 1;
-      @include transform-translate-x(0px);
+      padding: 5px 0;
+      transform: translate3d(0px, 0, 0);
     }
 
     &:after {
-      content: "";
+      content: '';
       position: absolute;
       bottom: 0;
-      right: 15px;
+      left: 15px;
       height: 1px;
       width: calc(100% - 30px);
-      background: $opacity-5;
+      background: rgba(255, 255, 255, 0.1);
     }
 
     p {
@@ -753,5 +715,60 @@
   .main-panel .content {
     padding-left: 15px;
     padding-right: 15px;
+  }
+}
+
+// Sidebar with light theme
+[data-background-color="white"] {
+  @include linear-gradient(#ffffff, #ffffff);
+  
+  .nav li {
+    a {
+      color: $default;
+      
+      i {
+        color: $default;
+      }
+      
+      &:hover {
+        background: rgba(0, 0, 0, 0.05);
+        
+        i, p {
+          color: $primary;
+        }
+      }
+    }
+    
+    &.active > a {
+      background: rgba(0, 0, 0, 0.05);
+      
+      &:before {
+        background: $primary;
+      }
+      
+      i, p {
+        color: $primary;
+      }
+    }
+  }
+  
+  .sidebar-wrapper {
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.1);
+      
+      &:hover {
+        background: rgba(0, 0, 0, 0.15);
+      }
+    }
+  }
+  
+  .logo {
+    &:after {
+      background: rgba(0, 0, 0, 0.05);
+    }
   }
 }
