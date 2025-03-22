@@ -1,6 +1,8 @@
 body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
+  color: $text-color;
+  letter-spacing: 0.01em;
 }
 
 h1,
@@ -16,9 +18,15 @@ h6,
 .h5,
 .h6 {
   line-height: $headings-line-height;
+  font-weight: $font-weight-bold;
+  color: $text-color;
+  letter-spacing: -0.02em;
 }
+
 p {
-  font-weight: $font-weight-light;
+  font-weight: $font-weight-normal;
+  color: $text-muted;
+  line-height: 1.6;
 }
 
 button,
@@ -28,6 +36,7 @@ select,
 textarea {
   font-family: $font-family-base;
 }
+
 .card {
   h1,
   h2,
@@ -36,9 +45,10 @@ textarea {
   h5,
   h6,
   p {
-    color: $opacity-8;
+    color: $text-color;
   }
 }
+
 h1,
 h2,
 h3,
@@ -50,13 +60,16 @@ h6 {
 }
 
 a {
-  color: $primary-states;
-  font-weight: $font-weight-light;
+  color: $primary;
+  font-weight: $font-weight-normal;
+  transition: color 0.2s ease;
+  
   &:hover,
   &:focus {
-    color: $primary;
+    color: color.adjust($primary, $lightness: 10%);
   }
 }
+
 h1,
 .h1 {
   line-height: 1.05;
@@ -68,16 +81,19 @@ h1,
     opacity: 0.8;
   }
 }
+
 h2,
 .h2 {
   margin-bottom: $margin-base-vertical * 2;
   line-height: 1.2;
 }
+
 h3,
 .h3 {
   margin-bottom: $margin-base-vertical * 2;
   line-height: 1.4em;
 }
+
 h4,
 .h4 {
   line-height: 1.45em;
@@ -88,16 +104,19 @@ h4,
     margin-top: -10px;
   }
 }
+
 h5,
 .h5 {
   line-height: 1.4em;
   margin-bottom: 15px;
 }
+
 h6,
 .h6 {
   text-transform: uppercase;
   font-weight: $font-weight-bold;
 }
+
 p {
   color: $opacity-8;
   margin-bottom: 5px;
@@ -129,6 +148,7 @@ p {
   color: $dark-gray;
   font-weight: $font-weight-light;
 }
+
 .category,
 .card-category {
   text-transform: capitalize;

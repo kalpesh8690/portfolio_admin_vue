@@ -16,7 +16,7 @@
             <p class="description" v-if="education.description">{{ education.description }}</p>
           </div>
           <div class="education-actions">
-            <base-button type="info" size="sm" @click="$emit('edit-education', education, index)">
+            <base-button type="success" size="sm" @click="$emit('edit-education', education, index)">
               Edit
             </base-button>
             <base-button type="danger" size="sm" @click="confirmDelete(index)">

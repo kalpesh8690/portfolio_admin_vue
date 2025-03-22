@@ -26,8 +26,8 @@ $gray-800: #32325d !default;
 $gray-900: #212529 !default;
 
 // Text colors
-$text-color: $white !default;
-$text-muted: rgba($white, 0.6) !default;
+$text-color: #f8f9fa !default;
+$text-muted: rgba($white, 0.7) !default;
 
 // Theme colors
 $blue: #5e72e4 !default;
@@ -420,8 +420,8 @@ $general-transition-time: 300ms !default;
 
 // Fonts
 
-$font-family-base: "Poppins", sans-serif !default;
-$font-family-alt: "Poppins", sans-serif !default;
+$font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$font-family-alt: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
 
 $font-size-dash: 0.875rem !default;
 
