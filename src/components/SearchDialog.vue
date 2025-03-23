@@ -1,10 +1,10 @@
 <template>
   <div class="search-dialog">
     <!-- Dialog/Modal Backdrop -->
-    <div v-if="show" class="dialog-backdrop" @click="closeDialog"></div>
+    <div v-if="show" class="dialog-backdrop" :class="{ 'is-active': show }" @click="closeDialog"></div>
 
     <!-- Dialog Content -->
-    <div v-if="show" class="dialog-container" :class="{ 'dialog-active': show }">
+    <div v-if="show" class="dialog-container" :class="{ 'is-active': show }">
       <div class="dialog-header">
         <div class="search-input-wrapper">
           <input
@@ -254,35 +254,43 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 1000;
     opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: none;
+
+    &.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
   }
 
   .dialog-container {
     position: fixed;
-    top: 50%;
+    top: 500%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0.95);
     width: 90%;
-    max-width: 800px;
-    max-height: 80vh;
-    background: var(--card-bg);
+    max-width: 600px;
+    background-color: var(--bg-color);
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    z-index: 1001;
-    display: flex;
-    flex-direction: column;
     opacity: 0;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+    pointer-events: none;
 
-    &.dialog-active {
+    &.is-active {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
+      pointer-events: auto;
     }
   }
 

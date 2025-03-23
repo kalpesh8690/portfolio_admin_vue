@@ -20,15 +20,16 @@
       <div class="navbar-right">
         <!-- Search -->
         <div class="navbar-search">
-          <button class="icon-button" @click="showSearchDialog = true">
+          <button class="search-button" @click="showSearchDialog = true">
             <i class="fas fa-search"></i>
-            <span class="search-label">Search</span>
+            <span class="search-label">Search...</span>
+            <span class="search-shortcut">⌘K</span>
           </button>
-          <SearchDialog 
+        </div>
+        <SearchDialog 
             :show="showSearchDialog"
             @close="showSearchDialog = false"
           />
-        </div>
 
         <!-- Notifications -->
         <div class="notifications-container">
@@ -163,6 +164,14 @@ export default {
       userRole: 'Administrator'
     }
   },
+  mounted() {
+    // Add keyboard shortcut listener
+    window.addEventListener('keydown', this.handleKeyPress);
+  },
+  beforeDestroy() {
+    // Remove keyboard shortcut listener
+    window.removeEventListener('keydown', this.handleKeyPress);
+  },
   methods: {
     ...mapActions('theme', ['toggleTheme']),
     capitalizeFirstLetter(string) {
@@ -190,6 +199,13 @@ export default {
     logout() {
       // Implement logout functionality
       console.log('Logging out...');
+    },
+    handleKeyPress(event) {
+      // Check for Ctrl+K (Windows) or Cmd+K (Mac)
+      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+        event.preventDefault(); // Prevent default browser behavior
+        this.showSearchDialog = true;
+      }
     }
   }
 };
@@ -202,9 +218,11 @@ export default {
   left: 0;
   width: 100%;
   height: 70px;
-  background-color: var(--bg-color);
-  box-shadow: var(--shadow);
+  background: linear-gradient(to right, var(--bg-color), var(--bg-color-secondary));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   z-index: 1000;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
 
   &.with-sidebar {
     width: calc(100% - 260px);
@@ -217,7 +235,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    padding: 0 1.5rem;
+    padding: 0 2rem;
     max-width: 1400px;
     margin: 0 auto;
     width: 100%;
@@ -227,18 +245,21 @@ export default {
   .navbar-left {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 1.5rem;
 
     .menu-toggle {
       background: none;
       border: none;
-      padding: 8px;
+      padding: 10px;
       cursor: pointer;
       color: var(--text-color);
-      border-radius: 8px;
+      border-radius: 12px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &::before {
         content: '';
@@ -248,7 +269,7 @@ export default {
         width: 100%;
         height: 100%;
         background: var(--primary-color-light);
-        border-radius: 8px;
+        border-radius: 12px;
         transform: translate(-50%, -50%) scale(0);
         opacity: 0;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -269,29 +290,24 @@ export default {
       }
 
       i {
-        font-size: 20px;
+        font-size: 22px;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      &.is-active {
-        i {
-          transform: rotate(180deg);
-        }
       }
     }
 
     .page-title {
-      font-size: 1.25rem;
-      font-weight: 600;
+      font-size: 1.5rem;
+      font-weight: 700;
       color: var(--text-color);
       transition: color 0.3s ease;
+      letter-spacing: -0.5px;
     }
   }
 
   .navbar-right {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
   }
 }
 
@@ -301,7 +317,15 @@ export default {
     left: 0 !important;
     
     .navbar-container {
-      padding: 0 1rem;
+      padding: 0 1.25rem;
+    }
+
+    .navbar-left {
+      gap: 1rem;
+    }
+
+    .navbar-right {
+      gap: 1rem;
     }
   }
 }
@@ -309,25 +333,98 @@ export default {
 .navbar-search {
   margin-right: 1rem;
 
-  .search-label {
-    font-size: 0.875rem;
-    margin-left: 0.5rem;
+  .search-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--bg-color-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-color-secondary);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 240px;
+
+    &:hover {
+      background: var(--bg-color-hover);
+      border-color: var(--primary-color-light);
+      color: var(--text-color);
+    }
+
+    i {
+      font-size: 1rem;
+      color: var(--text-color-secondary);
+      transition: color 0.3s ease;
+    }
+
+    .search-label {
+      flex: 1;
+      text-align: left;
+    }
+
+    .search-shortcut {
+      padding: 0.25rem 0.5rem;
+      background: var(--bg-color);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-color-secondary);
+      border: 1px solid var(--border-color);
+    }
   }
 }
 
 .icon-button {
   background: none;
   border: none;
-  padding: 0.5rem;
+  padding: 10px;
   cursor: pointer;
   position: relative;
   color: var(--text-color);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-color-light);
+    border-radius: 12px;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
   &:hover {
     color: var(--primary-color);
+    
+    &::before {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.1;
+    }
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  i {
+    font-size: 20px;
+  }
+
+  span {
+    font-size: 0.9375rem;
+    font-weight: 500;
   }
 }
 
@@ -338,33 +435,41 @@ export default {
   background-color: var(--danger-color);
   color: white;
   font-size: 0.75rem;
+  font-weight: 600;
   padding: 0.25rem 0.5rem;
   border-radius: 10px;
   min-width: 20px;
   text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translate(25%, -25%);
 }
 
 .notifications-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 0.5rem);
   right: 0;
-  width: 300px;
+  width: 360px;
   background-color: var(--bg-color);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   margin-top: 0.5rem;
+  overflow: hidden;
+  transform-origin: top right;
+  animation: dropdownEnter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   .notifications-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: 1.25rem;
     border-bottom: 1px solid var(--border-color);
 
     h3 {
       margin: 0;
-      font-size: 1rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-color);
     }
 
     .mark-all-read {
@@ -373,23 +478,30 @@ export default {
       color: var(--primary-color);
       cursor: pointer;
       font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
 
       &:hover {
-        text-decoration: underline;
+        background: var(--primary-color-light);
+        opacity: 0.8;
       }
     }
   }
 
   .notifications-list {
-    max-height: 300px;
+    max-height: 400px;
     overflow-y: auto;
+    padding: 0.5rem;
 
     .notification-item {
       display: flex;
       align-items: flex-start;
       padding: 1rem;
-      border-bottom: 1px solid var(--border-color);
-      transition: background-color 0.2s ease;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      margin-bottom: 0.5rem;
 
       &:hover {
         background-color: var(--bg-color-secondary);
@@ -402,6 +514,7 @@ export default {
       .notification-icon {
         margin-right: 1rem;
         color: var(--primary-color);
+        font-size: 1.25rem;
       }
 
       .notification-content {
@@ -409,12 +522,15 @@ export default {
 
         p {
           margin: 0;
-          font-size: 0.875rem;
+          font-size: 0.9375rem;
+          line-height: 1.5;
+          color: var(--text-color);
         }
 
         .notification-time {
-          font-size: 0.75rem;
+          font-size: 0.8125rem;
           color: var(--text-color-secondary);
+          margin-top: 0.25rem;
         }
       }
     }
@@ -425,51 +541,67 @@ export default {
   position: relative;
 
   .user-avatar {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     object-fit: cover;
+    border: 2px solid var(--primary-color-light);
+    transition: all 0.3s ease;
   }
 
   .user-name {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    margin-left: 0.75rem;
+    color: var(--text-color);
+  }
+
+  .fa-chevron-down {
     font-size: 0.875rem;
     margin-left: 0.5rem;
+    transition: transform 0.3s ease;
   }
 }
 
 .user-menu {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 0.5rem);
   right: 0;
-  width: 250px;
+  width: 280px;
   background-color: var(--bg-color);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   margin-top: 0.5rem;
+  overflow: hidden;
+  transform-origin: top right;
+  animation: dropdownEnter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   .user-menu-header {
-    padding: 1rem;
+    padding: 1.5rem;
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     gap: 1rem;
 
     .user-avatar-large {
-      width: 48px;
-      height: 48px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       object-fit: cover;
+      border: 2px solid var(--primary-color-light);
     }
 
     .user-info {
       h4 {
         margin: 0;
-        font-size: 1rem;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-color);
       }
 
       p {
-        margin: 0;
+        margin: 0.25rem 0 0;
         font-size: 0.875rem;
         color: var(--text-color-secondary);
       }
@@ -483,30 +615,75 @@ export default {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.75rem;
+      padding: 0.875rem 1rem;
       color: var(--text-color);
       text-decoration: none;
-      border-radius: 4px;
-      transition: background-color 0.2s ease;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      font-weight: 500;
 
       &:hover {
         background-color: var(--bg-color-secondary);
+        color: var(--primary-color);
       }
 
       i {
         width: 20px;
         text-align: center;
+        font-size: 1.125rem;
       }
     }
   }
 }
 
-.theme-toggle-container {
-  margin-right: 0.5rem;
+@keyframes dropdownEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
 
-  .theme-label {
-    font-size: 0.875rem;
-    margin-left: 0.5rem;
+@media screen and (max-width: 768px) {
+  .navbar {
+    .navbar-container {
+      padding: 0 1rem;
+    }
+
+    .page-title {
+      font-size: 1.25rem;
+    }
+
+    .icon-button span {
+      display: none;
+    }
+
+    .notifications-dropdown,
+    .user-menu {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-width: 100%;
+      border-radius: 0;
+      margin-top: 0;
+    }
+
+    .navbar-search {
+      .search-button {
+        min-width: auto;
+        padding: 0.75rem;
+        
+        .search-label,
+        .search-shortcut {
+          display: none;
+        }
+      }
+    }
   }
 }
 

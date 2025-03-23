@@ -242,7 +242,7 @@ export default {
 
     .logo-normal {
       display: inline-block;
-      font-size: 1.25rem;
+      font-size: 1rem;
       font-weight: 600;
       color: var(--text-color);
       text-decoration: none;
