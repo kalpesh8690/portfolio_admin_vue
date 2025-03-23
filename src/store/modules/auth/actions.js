@@ -28,8 +28,8 @@ const actions = {
     try {
       const result = await apis.Auth.updateUser(payload)
 
-      localStorage.setItem('user', JSON.stringify(result.data))
-      commit('SET_USER', result.data)
+      localStorage.setItem('user', JSON.stringify(result.data.data))
+      commit('SET_USER', result.data.data)
       return Promise.resolve(result) // Resolve with the logged-in user data
     } catch (error) {
       console.error('API Error:', error)
@@ -45,6 +45,17 @@ const actions = {
       return Promise.resolve(result.data) // Resolve with the logout result data
     } catch (error) {
       console.error('API Error:', error)
+      return Promise.reject(error) // Reject with the error
+    }
+  },
+  async updateUserDetails({ commit }, payload) {
+    try {
+      const result = await apis.Auth.updateUserDetails(payload)
+      const user = await apis.Auth.getUser(result.data.data._id)
+      commit('SET_USER', user.data.data)
+      return Promise.resolve(result) // Resolve with the updated user details
+    } catch (error) {
+      console.error('API Error:', error)  
       return Promise.reject(error) // Reject with the error
     }
   },

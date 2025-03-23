@@ -5,7 +5,9 @@ const REGISTER_USER = 'register'
 const LOGIN_USER = 'login'
 const LOGOUT_USER = 'logout'
 const UPDATE_USER = 'update'
+const UPDATE_USER_DETAILS = 'updateDetails'
 const GET_ALL = 'getAll'
+const GET_USER = 'getSingle'
 const LOGOUT = 'logout'
 
 const dir = '/users/'
@@ -27,10 +29,18 @@ const UserAPI = {
   },
 
   updateUser(payload) {
+
+
     return Repository.post(`${dir}` + UPDATE_USER, payload)
   },
   getAll(payload) {
     return Repository.post(`${dir}` + GET_ALL, payload)
+  },
+  updateUserDetails(payload) {
+    return Repository.post(`${dir}` + UPDATE_USER_DETAILS, payload)
+  },
+  getUser(payload) {
+    return Repository.post(`${dir}` + GET_USER, payload)
   },
 }
 

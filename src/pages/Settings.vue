@@ -284,12 +284,26 @@
   
         try {
           const formData = new FormData()
-          formData.append('profile', file)
-          await this.updateUser(formData)
-          // Show success notification
+          formData.append('file', file)
+          formData.append('_id', this.user._id)
+          
+          // Set the correct content type for file upload
+          const response = await this.updateUser(formData)
+          
+          if (response) {
+            this.$notify({
+              type: 'success',
+              message: 'Profile picture updated successfully!',
+              icon: 'tim-icons icon-check-2'
+            })
+          }
         } catch (error) {
           console.error('Failed to upload image:', error)
-          // Show error notification
+          this.$notify({
+            type: 'danger',
+            message: 'Failed to upload profile picture. Please try again.',
+            icon: 'tim-icons icon-alert-circle-exc'
+          })
         }
       },
       async saveAccountSettings() {

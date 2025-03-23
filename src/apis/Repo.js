@@ -1,42 +1,45 @@
-// Repository.js
-import axios from 'axios'
+import axios from 'axios';
 
-const baseURL = process.env.VUE_APP_API_URL
+let baseURL = process.env.VUE_APP_API_URL;
 
 const Repository = axios.create({
   baseURL,
-  timeout: 10000, // Adjust the timeout value as per your requirement
-  headers: {
-    authorization: localStorage.getItem('token'),
-    'Content-Type': 'application/json',
-  },
-})
+  timeout: 10000,
+});
 
-// Add a request interceptor
 Repository.interceptors.request.use(
   (config) => {
-    // Do something before request is sent
-    return config
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    // Dynamically set Content-Type based on request data
+    if (config.data instanceof FormData) {
+      config.headers['Content-Type'] = 'multipart/form-data';
+    } else {
+      config.headers['Content-Type'] = 'application/json';
+    }
+
+    return config;
   },
   (error) => {
-    // Do something with request error
-    return Promise.reject(error)
-  },
-)
+    return Promise.reject(error);
+  }
+);
 
-// Add a response interceptor
+// Add response interceptor to handle errors
 Repository.interceptors.response.use(
-  (response) => {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
-
-    return response
-  },
+  (response) => response,
   (error) => {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
-    return Promise.reject(error)
-  },
-)
+    if (error.response?.status === 401) {
+      // Handle unauthorized access
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
-export default Repository
+export default Repository;
