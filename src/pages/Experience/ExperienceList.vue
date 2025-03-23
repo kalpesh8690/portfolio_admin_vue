@@ -1,7 +1,7 @@
 <template>
   <base-card>
     <h6 slot="header" class="title">Work Experience History</h6>
-    <div class="experience-list">
+    <div class="list-container">
       <div v-if="experienceList.length === 0" class="no-data">
         No work experience records found.
       </div>
@@ -9,27 +9,29 @@
         <div 
           v-for="(experience, index) in experienceList" 
           :key="index" 
-          class="experience-item searchable-item"
+          class="list-item searchable-item"
           :data-id="experience.id || experience.companyName"
           :data-name="experience.companyName">
-          <div class="experience-content">
-            <div class="experience-header">
-              <h4 class="position">{{ experience.position }}</h4>
-              <div class="company-info">
-                <span class="company-name">{{ experience.companyName }}</span>
-                <span class="location">· {{ experience.location }}</span>
-              </div>
+          <div class="item-content">
+            <div class="item-header">
+              <h4>{{ experience.position }}</h4>
+              <div class="badge">{{ experience.employmentType }}</div>
             </div>
-            <p class="employment-type">{{ experience.employmentType }}</p>
-            <p class="date">
-              {{ formatDate(experience.startDate) }} - {{ experience.endDate ? formatDate(experience.endDate) : 'Present' }}
-            </p>
-            <p class="description" v-if="experience.description">{{ experience.description }}</p>
-            <p class="technologies" v-if="experience.technologies">
-              <strong>Technologies:</strong> {{ experience.technologies }}
-            </p>
+            <div class="item-details">
+              <p>
+                <strong>{{ experience.companyName }}</strong>
+                <span v-if="experience.location"> · {{ experience.location }}</span>
+              </p>
+              <p>
+                <strong>Duration:</strong> {{ formatDate(experience.startDate) }} - {{ experience.endDate ? formatDate(experience.endDate) : 'Present' }}
+              </p>
+              <p v-if="experience.description">{{ experience.description }}</p>
+              <p v-if="experience.technologies">
+                <strong>Technologies:</strong> {{ experience.technologies }}
+              </p>
+            </div>
           </div>
-          <div class="experience-actions">
+          <div class="item-actions">
             <base-button type="info" size="sm" @click="$emit('edit-experience', experience, index)">
               Edit
             </base-button>
@@ -73,105 +75,6 @@ export default {
 }
 </script>
 
-<style scoped>
-.experience-list {
-  padding: 0 10px;
-}
-
-.experience-item {
-  border-bottom: 1px solid #e9ecef;
-  padding: 20px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  transition: all 0.3s ease;
-}
-
-.experience-item:last-child {
-  border-bottom: none;
-}
-
-.experience-item.search-highlight {
-  background-color: #ff9800;
-  border-radius: 8px;
-  transform: scale(1.02);
-  box-shadow: 0 4px 8px rgba(255, 152, 0, 0.2);
-}
-
-.experience-item.search-highlight .position,
-.experience-item.search-highlight .company-name,
-.experience-item.search-highlight .location,
-.experience-item.search-highlight .employment-type,
-.experience-item.search-highlight .date,
-.experience-item.search-highlight .description,
-.experience-item.search-highlight .technologies {
-  color: white;
-}
-
-.experience-item.search-highlight .technologies strong {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.experience-content {
-  flex: 1;
-}
-
-.experience-header {
-  margin-bottom: 10px;
-}
-
-.position {
-  margin: 0;
-  color: #333;
-  font-size: 1.2rem;
-}
-
-.company-info {
-  margin-top: 5px;
-}
-
-.company-name {
-  font-weight: 600;
-  color: #555;
-}
-
-.location {
-  color: #666;
-  margin-left: 5px;
-}
-
-.employment-type {
-  color: #666;
-  font-size: 0.9em;
-  margin: 5px 0;
-}
-
-.date {
-  color: #666;
-  font-size: 0.9em;
-  margin: 5px 0;
-}
-
-.description {
-  color: #666;
-  margin: 10px 0;
-  white-space: pre-line;
-}
-
-.technologies {
-  color: #666;
-  margin: 10px 0 0 0;
-  font-size: 0.9em;
-}
-
-.experience-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.no-data {
-  text-align: center;
-  padding: 20px;
-  color: #666;
-}
+<style lang="scss" scoped>
+@import '@/assets/sass/black-dashboard/list.scss';
 </style> 

@@ -7,7 +7,7 @@
           <div class="row" slot="header">
             <div class="col-5 col-md-4">
               <div class="icon-big text-center icon-primary">
-                <i class="tim-icons icon-briefcase-24"></i>
+                <i class="tim-icons icon-user-run"></i>
               </div>
             </div>
             <div class="col-7 col-md-8">
@@ -183,14 +183,24 @@
           <h4 slot="header" class="card-title">Latest Education</h4>
           <div class="education-timeline">
             <div v-for="edu in educationByDate" :key="edu.institution" class="education-item">
-              <div class="education-header">
-                <h5>{{ edu.degree }}</h5>
-                <span class="institution">{{ edu.institution }}</span>
-              </div>
-              <div class="education-details">
-                <p class="field">{{ edu.fieldOfStudy }}</p>
-                <p class="duration">{{ formatDate(edu.startDate) }} - {{ formatDate(edu.endDate) }}</p>
-                <p class="description" v-if="edu.description">{{ edu.description }}</p>
+              <div class="education-content">
+                <div class="education-header">
+                  <div class="degree-info">
+                    <h5>{{ edu.degree }}</h5>
+                    <span class="institution">{{ edu.institution }}</span>
+                  </div>
+                  <div class="education-badge">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>{{ edu.fieldOfStudy }}</span>
+                  </div>
+                </div>
+                <div class="education-details">
+                  <div class="duration">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>{{ formatDate(edu.startDate) }} - {{ formatDate(edu.endDate) }}</span>
+                  </div>
+                  <p class="description" v-if="edu.description">{{ edu.description }}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -257,7 +267,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use "sass:color";
 
 .card-stats .icon-big {
@@ -413,51 +423,148 @@ export default {
 }
 
 .education-timeline {
-  padding: 20px 0;
+  position: relative;
+  padding: 1rem 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 1.5rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border-color);
+  }
 }
 
 .education-item {
-  padding: 20px;
-  margin-bottom: 20px;
-  border-left: 3px solid #e14eca;
-  background-color: rgba(225, 78, 202, 0.05);
-  border-radius: 0 8px 8px 0;
+  position: relative;
+  padding-left: 3.5rem;
+  margin-bottom: 2rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 1.25rem;
+    top: 0.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: 2px solid var(--card-bg);
+    z-index: 1;
+  }
+
+  &:hover::before {
+    background: var(--primary-color-dark);
+    transform: scale(1.2);
+    transition: all 0.3s ease;
+  }
 }
 
-.education-item:last-child {
-  margin-bottom: 0;
+.education-content {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color-light);
+  }
 }
 
 .education-header {
-  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+
+  .degree-info {
+    h5 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .institution {
+      display: block;
+      color: var(--text-color-secondary);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+  }
+
+  .education-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    background: var(--primary-color-light);
+    color: var(--primary-color);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    i {
+      font-size: 0.9rem;
+    }
+  }
 }
 
-.education-header h5 {
-  color: #333;
-  margin: 0 0 5px 0;
+.education-details {
+  .duration {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+
+    i {
+      color: var(--primary-color);
+    }
+  }
+
+  .description {
+    color: var(--text-color-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin: 0;
+  }
 }
 
-.institution {
-  color: #666;
-  font-weight: 600;
-}
+@media (max-width: 768px) {
+  .education-timeline {
+    &::before {
+      left: 1rem;
+    }
+  }
 
-.education-details .field {
-  color: #333;
-  margin: 5px 0;
-}
+  .education-item {
+    padding-left: 2.5rem;
 
-.education-details .duration {
-  color: #9A9A9A;
-  font-size: 0.9em;
-  margin: 5px 0;
-}
+    &::before {
+      left: 0.75rem;
+    }
+  }
 
-.education-details .description {
-  color: #666;
-  font-size: 0.95em;
-  margin: 10px 0 0 0;
-  line-height: 1.5;
+  .education-header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .education-badge {
+    align-self: flex-start;
+  }
 }
 
 .modern-table-wrapper {
