@@ -8,6 +8,8 @@ const Dashboard = () =>
   import(/* webpackChunkName: "dashboard" */ "@/pages/Dashboard.vue");
 const Profile = () =>
   import(/* webpackChunkName: "admin-profile" */ "@/pages/Profile.vue");
+const Settings = () =>
+  import(/* webpackChunkName: "settings" */ "@/pages/Settings.vue");
 const Education = () =>
   import(/* webpackChunkName: "education" */ "@/pages/Education.vue");
 const Experience = () =>
@@ -43,6 +45,11 @@ const routes = [
         path: "profile",
         name: "profile",
         component: Profile,
+      },
+      {
+        path: "settings",
+        name: "settings",
+        component: Settings,
       },
       {
         path: "education",

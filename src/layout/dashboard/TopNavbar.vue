@@ -83,15 +83,15 @@
               <img :src="userAvatar" alt="User avatar" class="user-avatar-large">
               <div class="user-info">
                 <h4>{{ userName }}</h4>
-                <p>{{ userEmail }}</p>
+                <p style="font-size: small; overflow-wrap: anywhere;">{{ userEmail }}</p>
               </div>
             </div>
             <div class="user-menu-items">
-              <a href="#" class="menu-item">
+              <a href="#" @click="handleOpen('profile')" class="menu-item">
                 <i class="fas fa-user"></i>
                 <span>Profile</span>
               </a>
-              <a href="#" class="menu-item">
+              <a href="#" @click="handleOpen('settings')" class="menu-item">
                 <i class="fas fa-cog"></i>
                 <span>Settings</span>
               </a>
@@ -209,6 +209,13 @@ export default {
       try {
         await this.logout();
         this.$router.push('/login');
+      } catch (error) {
+        console.error('Logout failed:', error);
+      }
+    },
+    async handleOpen(page) {
+      try {
+        this.$router.push(page);
       } catch (error) {
         console.error('Logout failed:', error);
       }
