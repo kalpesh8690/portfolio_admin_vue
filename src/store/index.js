@@ -8,6 +8,7 @@ import education from './modules/education'
 import profile from './modules/profile'
 import search from './modules/search'
 import theme from './modules/theme'
+import auth from './modules/auth'
 import createDemoDataPlugin from './plugins/demoDataPlugin'
 
 Vue.use(Vuex)
@@ -22,7 +23,8 @@ const store = new Vuex.Store({
     education,
     profile,
     search,
-    theme
+    theme,
+    auth
   },
   plugins: [createDemoDataPlugin()]
 })

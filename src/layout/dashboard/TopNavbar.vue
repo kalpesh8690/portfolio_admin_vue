@@ -83,7 +83,7 @@
               <img :src="userAvatar" alt="User avatar" class="user-avatar-large">
               <div class="user-info">
                 <h4>{{ userName }}</h4>
-                <p>{{ userRole }}</p>
+                <p>{{ userEmail }}</p>
               </div>
             </div>
             <div class="user-menu-items">
@@ -95,7 +95,7 @@
                 <i class="fas fa-cog"></i>
                 <span>Settings</span>
               </a>
-              <a href="#" class="menu-item" @click="logout">
+              <a href="#" class="menu-item" @click="handleLogout">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Logout</span>
               </a>
@@ -109,7 +109,7 @@
 
 <script>
 import SearchDialog from '@/components/SearchDialog.vue';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'TopNavbar',
@@ -118,6 +118,7 @@ export default {
   },
   computed: {
     ...mapGetters('theme', ['isDarkMode']),
+    ...mapState('auth', ['user']),
     showSidebarToggle() {
       // Only show sidebar toggle on dashboard layout
       return true
@@ -128,6 +129,15 @@ export default {
         return meta.title;
       }
       return this.capitalizeFirstLetter(name || 'Dashboard');
+    },
+    userAvatar() {
+      return this.user.profile || 'https://via.placeholder.com/40'
+    },
+    userName() {
+      return this.user.firstName || 'User'
+    },
+    userEmail() {
+      return this.user.email
     }
   },
   data() {
@@ -159,8 +169,6 @@ export default {
           read: true
         }
       ],
-      userAvatar: 'https://via.placeholder.com/40',
-      userName: 'John Doe',
       userRole: 'Administrator'
     }
   },
@@ -174,6 +182,7 @@ export default {
   },
   methods: {
     ...mapActions('theme', ['toggleTheme']),
+    ...mapActions('auth', ['logout']),
     capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },
@@ -196,11 +205,13 @@ export default {
       });
       this.unreadNotifications = false;
     },
-    logout() {
-      // Implement logout functionality
-      localStorage.removeItem('token');
-      this.$router.push('/login');
-      console.log('Logging out...');
+    async handleLogout() {
+      try {
+        await this.logout();
+        this.$router.push('/login');
+      } catch (error) {
+        console.error('Logout failed:', error);
+      }
     },
     handleKeyPress(event) {
       // Check for Ctrl+K (Windows) or Cmd+K (Mac)

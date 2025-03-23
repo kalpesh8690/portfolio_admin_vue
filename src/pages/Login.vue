@@ -108,6 +108,7 @@ import { ref, reactive } from 'vue'
 import BaseInput from '@/components/Inputs/BaseInput.vue'
 import BaseCheckbox from '@/components/Inputs/BaseCheckbox.vue'
 import BaseButton from '@/components/BaseButton.vue'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'LoginPage',
@@ -145,8 +146,8 @@ export default {
     }
   },
   methods: {
+    ...mapActions('auth', ['loginWithPass']),
     async handleLogin() {
-      console.log('handleLogin')
       this.error = null
       const isFormCorrect = await this.v$.$validate()
       
@@ -154,16 +155,38 @@ export default {
       
       this.loading = true
       try {
-        // Simulate login API call
-        const token = 'dummy-token'
-        localStorage.setItem('token', token)
+        const result = await this.loginWithPass({
+          email: this.form.email,
+          password: this.form.password
+        })
+
+        // Store user data and token
+        if (result.data) {
+          const { token, ...userData } = result.data
+          localStorage.setItem('token', token)
+          localStorage.setItem('user', JSON.stringify(userData))
+        }
+
+        if (this.form.rememberMe) {
+          localStorage.setItem('rememberMe', 'true')
+        } else {
+          localStorage.removeItem('rememberMe')
+        }
+
         const redirectPath = this.$route.query.redirect || '/dashboard'
         await this.$router.push(redirectPath)
       } catch (err) {
-        this.error = err.message || 'Failed to login. Please try again.'
+        this.error = err.response?.data?.message || 'Failed to login. Please try again.'
       } finally {
         this.loading = false
       }
+    }
+  },
+  created() {
+    // Check if remember me was previously set
+    const rememberMe = localStorage.getItem('rememberMe')
+    if (rememberMe === 'true') {
+      this.form.rememberMe = true
     }
   }
 }

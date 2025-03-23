@@ -5,8 +5,8 @@
       <div class="col-lg-4">
         <base-card>
           <div class="text-center">
-            <img :src="profile.avatar" alt="Profile Avatar" class="profile-avatar">
-            <h3 class="mt-3">{{ fullName }}</h3>
+            <img :src="user.profile || '/default-avatar.png'" alt="Profile Avatar" class="profile-avatar">
+            <h3 class="mt-3">{{ user.firstName }}</h3>
             <p class="title">{{ profile.title }}</p>
             <p class="availability">{{ profile.availability }}</p>
             <base-button type="primary" class="btn-simple" @click="showEditForm = true">
@@ -17,11 +17,11 @@
             <h6 class="section-title">Contact Information</h6>
             <div class="info-item">
               <i class="tim-icons icon-email-85"></i>
-              <span>{{ contactInfo.email }}</span>
+              <span>{{ user.email }}</span>
             </div>
             <div class="info-item">
               <i class="tim-icons icon-mobile"></i>
-              <span>{{ contactInfo.phone }}</span>
+              <span>{{ user.mobile }}</span>
             </div>
             <div class="info-item">
               <i class="tim-icons icon-pin"></i>
@@ -66,7 +66,11 @@
         </base-card>
 
         <!-- Edit Form -->
-        <edit-profile-form v-if="showEditForm" @submit="handleEditSubmit" />
+        <edit-profile-form 
+          v-if="showEditForm" 
+          :initial-data="user"
+          @submit="handleEditSubmit" 
+        />
 
         <!-- Professional Summary -->
         <base-card class="mt-4" v-if="!showEditForm">
@@ -104,7 +108,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState, mapActions } from 'vuex'
 import EditProfileForm from './Profile/EditProfileForm.vue'
 
 export default {
@@ -118,8 +122,8 @@ export default {
     }
   },
   computed: {
+    ...mapState('auth', ['user']),
     ...mapGetters('profile', [
-      'fullName',
       'profile',
       'socialLinks',
       'contactInfo'
@@ -130,8 +134,14 @@ export default {
     ...mapGetters('projects', ['projectCount'])
   },
   methods: {
-    handleEditSubmit() {
-      this.showEditForm = false;
+    ...mapActions('auth', ['updateUser']),
+    async handleEditSubmit(formData) {
+      try {
+        await this.updateUser(formData);
+        this.showEditForm = false;
+      } catch (error) {
+        console.error('Failed to update profile:', error);
+      }
     }
   }
 }
