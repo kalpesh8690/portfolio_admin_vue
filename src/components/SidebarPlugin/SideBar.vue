@@ -170,11 +170,12 @@ export default {
   bottom: 0;
   left: 0;
   width: 260px;
-  background: $primary;
-  box-shadow: 0 0 45px 0 rgba(0, 0, 0, 0.6);
+  background: var(--bg-color);
+  box-shadow: var(--shadow);
   z-index: 10;
   transition: all 0.3s ease;
   transform: translateX(0);
+  border-right: 1px solid var(--border-color);
 
   &.collapsed {
     transform: translateX(-230px);
@@ -222,6 +223,38 @@ export default {
     padding-bottom: 100px;
   }
 
+  .logo {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+
+    .logo-mini {
+      display: inline-block;
+      font-size: 1.5rem;
+      color: var(--text-color);
+      text-decoration: none;
+      transition: color 0.3s;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+
+    .logo-normal {
+      display: inline-block;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-color);
+      text-decoration: none;
+      transition: all 0.3s;
+      margin-left: 0.5rem;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+
   .nav {
     margin-top: 20px;
     
@@ -236,11 +269,11 @@ export default {
       &.active {
         & > a,
         & > a i {
-          color: $white;
+          color: var(--primary-color);
         }
         
         & > a i {
-          background: rgba(0, 0, 0, 0.2);
+          background: var(--primary-color-light);
         }
       }
     }
@@ -248,73 +281,8 @@ export default {
     p {
       margin: 0;
       line-height: 30px;
-      position: relative;
-      display: block;
-      height: auto;
-      white-space: nowrap;
-      transition: all 0.3s ease;
-    }
-    
-    i {
-      font-size: 24px;
-      float: left;
-      margin-right: 12px;
-      line-height: 30px;
-      width: 34px;
-      text-align: center;
-      color: rgba(255, 255, 255, 0.8);
-      position: relative;
-      border-radius: 4px;
-      transition: all 0.3s ease;
-    }
-  }
-  
-  .logo {
-    position: relative;
-    padding: 20px 15px;
-    z-index: 4;
-    
-    &:after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 15px;
-      height: 1px;
-      width: calc(100% - 30px);
-      background: rgba(255, 255, 255, 0.1);
-    }
-    
-    .simple-text {
-      text-transform: uppercase;
-      padding: 0;
-      display: block;
-      white-space: nowrap;
-      color: $white;
-      text-decoration: none;
-      font-weight: 400;
-      line-height: 30px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      
-      &.logo-mini {
-        opacity: 1;
-        float: left;
-        width: 34px;
-        text-align: center;
-        margin-left: 10px;
-        margin-right: 12px;
-        
-        i {
-          font-size: 18px;
-          color: $white;
-        }
-      }
-      
-      &.logo-normal {
-        display: block;
-        opacity: 1;
-        transform: translate3d(0px, 0, 0);
-      }
+      color: var(--text-color);
+      transition: all 0.3s;
     }
   }
 }

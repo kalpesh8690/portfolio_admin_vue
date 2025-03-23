@@ -70,3 +70,74 @@
 <script>
 export default {};
 </script>
+
+<style>
+.contact-us {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar {
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  
+  .navbar-brand {
+    color: var(--text-color);
+  }
+  
+  .nav li a {
+    color: var(--text-color);
+    
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+}
+
+.wrapper-full-page {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  
+  .title {
+    color: var(--text-color);
+    
+    &.text-danger {
+      color: var(--danger-color);
+    }
+  }
+}
+
+.footer-demo {
+  background-color: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  
+  nav ul li a {
+    color: var(--text-color);
+    
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+  
+  .copyright {
+    color: var(--text-color-secondary);
+  }
+}
+
+/* Add transitions for smooth theme switching */
+.contact-us,
+.navbar,
+.wrapper-full-page,
+.footer-demo {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar-brand,
+.nav li a,
+.title,
+.footer-demo nav ul li a,
+.copyright {
+  transition: color 0.3s;
+}
+</style>

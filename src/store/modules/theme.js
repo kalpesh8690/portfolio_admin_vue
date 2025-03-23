@@ -6,7 +6,7 @@ const mutations = {
   TOGGLE_THEME(state) {
     state.isDarkMode = !state.isDarkMode
     localStorage.setItem('theme', state.isDarkMode ? 'dark' : 'light')
-    document.body.classList.toggle('white-content', !state.isDarkMode)
+    document.documentElement.setAttribute('data-theme', state.isDarkMode ? 'dark' : 'light')
   }
 }
 
@@ -16,7 +16,7 @@ const actions = {
   },
   initTheme({ state }) {
     // Initialize theme based on stored preference
-    document.body.classList.toggle('white-content', !state.isDarkMode)
+    document.documentElement.setAttribute('data-theme', state.isDarkMode ? 'dark' : 'light')
   }
 }
 

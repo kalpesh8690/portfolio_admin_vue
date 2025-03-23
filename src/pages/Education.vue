@@ -120,25 +120,34 @@ export default {
 .summary-item i {
   font-size: 2rem;
   margin-bottom: 10px;
+  color: var(--primary-color);
 }
 
 .summary-item h3 {
-  color: #333;
+  color: var(--text-color);
   margin: 10px 0;
 }
 
 .summary-item h5 {
-  color: #666;
+  color: var(--text-color-secondary);
   margin-bottom: 10px;
 }
 
 .institution {
   font-weight: 600;
-  color: #333;
+  color: var(--text-color);
   margin: 5px 0;
 }
 
 .degree {
-  color: #666;
+  color: var(--text-color-secondary);
+}
+
+/* Add transitions for smooth theme switching */
+.summary-item h3,
+.summary-item h5,
+.institution,
+.degree {
+  transition: color 0.3s ease;
 }
 </style> 

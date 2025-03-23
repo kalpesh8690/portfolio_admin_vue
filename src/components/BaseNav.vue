@@ -145,6 +145,8 @@ export default {
   position: relative;
   padding: 1rem;
   transition: all 0.3s ease;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   
   &.navbar-sticky {
     position: sticky;
@@ -153,9 +155,9 @@ export default {
   }
   
   &.navbar-scrolled {
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--bg-color);
     backdrop-filter: blur(10px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow);
   }
   
   &.navbar-rounded {
@@ -166,7 +168,7 @@ export default {
     background-color: transparent !important;
     
     &.navbar-scrolled {
-      background: rgba(255, 255, 255, 0.95) !important;
+      background: var(--bg-color) !important;
     }
   }
   
@@ -183,7 +185,7 @@ export default {
   align-items: center;
   font-size: 1.25rem;
   font-weight: 600;
-  color: inherit;
+  color: var(--text-color);
   text-decoration: none;
   margin-right: 1rem;
   transition: opacity 0.2s;
@@ -208,10 +210,10 @@ export default {
     top: 100%;
     left: 0;
     right: 0;
-    background: white;
+    background: var(--bg-color);
     padding: 1rem;
     border-radius: 0.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow);
     transform-origin: top;
     transform: scaleY(0);
     opacity: 0;
@@ -245,34 +247,51 @@ export default {
   justify-content: space-between;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--border-color);
   
   @media (min-width: 992px) {
     display: none;
   }
 }
 
-// Dark theme support
-@media (prefers-color-scheme: dark) {
-  .navbar {
-    &.navbar-scrolled {
-      background: rgba(26, 32, 44, 0.95);
-    }
+.navbar-toggler {
+  display: none;
+  
+  @media (max-width: 991.98px) {
+    display: block;
+  }
+}
+
+// Theme-specific styles
+.navbar {
+  &.navbar-light {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
+  &.navbar-dark {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
+  &.navbar-primary {
+    background-color: var(--primary-color);
+    color: white;
     
-    &.navbar-transparent.navbar-scrolled {
-      background: rgba(26, 32, 44, 0.95) !important;
+    .navbar-brand,
+    .navbar-nav .nav-link {
+      color: white;
     }
   }
   
-  .navbar-collapse {
-    @media (max-width: 991.98px) {
-      background: #1a202c;
-      border: 1px solid #2d3748;
+  &.navbar-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+    
+    .navbar-brand,
+    .navbar-nav .nav-link {
+      color: white;
     }
-  }
-  
-  .navbar-collapse-header {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -301,26 +320,6 @@ export default {
   &.bg-info {
     background-color: #4299e1;
     color: white;
-  }
-  
-  &.navbar-dark {
-    color: white;
-    
-    .navbar-collapse {
-      @media (max-width: 991.98px) {
-        background: #2d3748;
-      }
-    }
-  }
-  
-  &.navbar-light {
-    color: #2d3748;
-    
-    .navbar-collapse {
-      @media (max-width: 991.98px) {
-        background: white;
-      }
-    }
   }
 }
 </style>

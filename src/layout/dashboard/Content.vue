@@ -15,3 +15,12 @@ export default {
   },
 };
 </script>
+
+<style>
+.content {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+  min-height: calc(100vh - 70px - 60px); // viewport height - navbar - footer
+}
+</style>

@@ -38,4 +38,46 @@ export default {
   },
 };
 </script>
-<style></style>
+<style>
+.footer {
+  background-color: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  padding: 1rem 0;
+  transition: background-color 0.3s, border-color 0.3s;
+
+  .nav {
+    margin-bottom: 0.5rem;
+
+    .nav-item {
+      .nav-link {
+        color: var(--text-color);
+        transition: color 0.3s;
+
+        &:hover {
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
+
+  .copyright {
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+    transition: color 0.3s;
+
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.3s;
+
+      &:hover {
+        color: var(--primary-color-dark);
+      }
+    }
+
+    .icon-heart-2 {
+      color: var(--danger-color);
+    }
+  }
+}
+</style>

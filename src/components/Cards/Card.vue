@@ -79,24 +79,33 @@ export default {
 
 <style lang="scss" scoped>
 .card {
-  background: #ffffff;
+  background: linear-gradient(145deg, var(--card-bg), var(--bg-color-secondary));
   border-radius: 15px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   margin-bottom: 24px;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 0;
+  border: 1px solid var(--border-color);
   overflow: hidden;
 
-  &.card-hover:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  &.card-hover {
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(145deg, var(--card-bg), var(--bg-color));
+    }
+
+    &:active {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
   }
 
   .card-image {
     position: relative;
     width: 100%;
     overflow: hidden;
+    background: var(--bg-color);
     
     img {
       width: 100%;
@@ -111,8 +120,9 @@ export default {
 
   .card-header {
     padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    background-color: transparent;
+    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(to right, var(--card-bg), transparent);
+    transition: all 0.3s ease;
 
     &:first-child {
       border-radius: 15px 15px 0 0;
@@ -122,78 +132,88 @@ export default {
       margin-bottom: 0.5rem;
       font-size: 1.25rem;
       font-weight: 600;
-      color: #2d3748;
+      color: var(--text-color);
       line-height: 1.2;
+      transition: color 0.3s ease;
     }
 
     .card-category {
       margin: 0;
       font-size: 0.875rem;
-      color: #718096;
+      color: var(--text-color-secondary);
+      transition: color 0.3s ease;
     }
   }
 
   .card-body {
     padding: 1.5rem;
     flex: 1 1 auto;
-    color: #4a5568;
+    color: var(--text-color);
     font-size: 0.875rem;
     line-height: 1.5;
+    transition: color 0.3s ease;
+    background: var(--card-bg);
   }
 
   .card-footer {
     padding: 1.25rem 1.5rem;
-    background-color: transparent;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background: linear-gradient(to right, transparent, var(--card-bg));
+    border-top: 1px solid var(--border-color);
+    transition: all 0.3s ease;
 
     &:last-child {
       border-radius: 0 0 15px 15px;
     }
   }
 
-  // Card types
+  // Card types with enhanced hover effects
   &.card-primary {
-    border-top: 3px solid #4299e1;
+    border-top: 3px solid var(--primary-color);
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-top-color: var(--primary-color-dark);
+      background: linear-gradient(145deg, var(--card-bg), var(--primary-color-light));
+    }
   }
 
   &.card-success {
-    border-top: 3px solid #48bb78;
+    border-top: 3px solid var(--success-color);
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-top-color: var(--success-color-dark);
+      background: linear-gradient(145deg, var(--card-bg), var(--success-color-light));
+    }
   }
 
   &.card-warning {
-    border-top: 3px solid #ecc94b;
+    border-top: 3px solid var(--warning-color);
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-top-color: var(--warning-color-dark);
+      background: linear-gradient(145deg, var(--card-bg), var(--warning-color-light));
+    }
   }
 
   &.card-danger {
-    border-top: 3px solid #f56565;
+    border-top: 3px solid var(--danger-color);
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-top-color: var(--danger-color-dark);
+      background: linear-gradient(145deg, var(--card-bg), var(--danger-color-light));
+    }
   }
 
   &.card-info {
-    border-top: 3px solid #4fd1c5;
-  }
+    border-top: 3px solid var(--info-color);
+    transition: all 0.3s ease;
 
-  // Dark theme support
-  @media (prefers-color-scheme: dark) {
-    background: #2d3748;
-    
-    .card-header {
-      border-bottom-color: rgba(255, 255, 255, 0.05);
-      
-      .card-title {
-        color: #f7fafc;
-      }
-      
-      .card-category {
-        color: #a0aec0;
-      }
-    }
-    
-    .card-body {
-      color: #e2e8f0;
-    }
-    
-    .card-footer {
-      border-top-color: rgba(255, 255, 255, 0.05);
+    &:hover {
+      border-top-color: var(--info-color-dark);
+      background: linear-gradient(145deg, var(--card-bg), var(--info-color-light));
     }
   }
 

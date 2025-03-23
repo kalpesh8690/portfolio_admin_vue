@@ -141,12 +141,12 @@ export default {
   height: 0;
 
   &:focus + .checkbox-control {
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+    box-shadow: 0 0 0 3px var(--primary-color-light);
   }
 
   &:checked + .checkbox-control {
-    background-color: #4299e1;
-    border-color: #4299e1;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 
     .checkbox-check {
       transform: scale(1);
@@ -155,8 +155,8 @@ export default {
   }
 
   &:disabled + .checkbox-control {
-    background-color: #e2e8f0;
-    border-color: #cbd5e0;
+    background-color: var(--bg-color-secondary);
+    border-color: var(--border-color);
   }
 }
 
@@ -167,9 +167,9 @@ export default {
   justify-content: center;
   width: 1.25rem;
   height: 1.25rem;
-  border: 2px solid #cbd5e0;
+  border: 2px solid var(--border-color);
   border-radius: 0.25rem;
-  background-color: white;
+  background-color: var(--bg-color);
   transition: all 0.2s ease;
 
   .checkbox-check {
@@ -185,14 +185,14 @@ export default {
 .checkbox-text {
   padding-left: 0.75rem;
   font-size: 0.875rem;
-  color: #4a5568;
+  color: var(--text-color);
   line-height: 1.25;
 }
 
 .checkbox-error {
   margin-top: 0.25rem;
   font-size: 0.75rem;
-  color: #e53e3e;
+  color: var(--danger-color);
 }
 
 // Dark theme support

@@ -61,4 +61,40 @@ export default {
   },
 };
 </script>
-<style></style>
+<style>
+.nav-item {
+  .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: var(--primary-color);
+      background-color: var(--hover-bg);
+    }
+
+    &.active {
+      color: var(--primary-color);
+      background-color: var(--primary-color-light);
+    }
+
+    i {
+      font-size: 1.25rem;
+      margin-right: 0.75rem;
+      width: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+  }
+}
+</style>

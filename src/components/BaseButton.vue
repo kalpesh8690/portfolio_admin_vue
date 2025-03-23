@@ -102,7 +102,7 @@ export default {
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+    box-shadow: 0 0 0 3px var(--primary-color-light);
   }
 
   &:disabled {
@@ -134,109 +134,109 @@ export default {
 
   // Button types
   &.btn-primary {
-    background: #4299e1;
+    background: var(--primary-color);
     color: white;
-    border-color: #4299e1;
+    border-color: var(--primary-color);
 
     &:hover:not(:disabled) {
-      background: #3182ce;
-      border-color: #3182ce;
+      background: var(--primary-color-dark);
+      border-color: var(--primary-color-dark);
       transform: translateY(-1px);
     }
 
     &:active:not(:disabled) {
-      background: #2c5282;
-      border-color: #2c5282;
+      background: var(--primary-color-darker);
+      border-color: var(--primary-color-darker);
       transform: translateY(0);
     }
 
     &.btn-simple {
       background: transparent;
-      color: #4299e1;
+      color: var(--primary-color);
 
       &:hover:not(:disabled) {
-        background: rgba(66, 153, 225, 0.1);
+        background: var(--primary-color-light);
       }
     }
   }
 
   &.btn-success {
-    background: #48bb78;
+    background: var(--success-color);
     color: white;
-    border-color: #48bb78;
+    border-color: var(--success-color);
 
     &:hover:not(:disabled) {
-      background: #38a169;
-      border-color: #38a169;
+      background: var(--success-color-dark);
+      border-color: var(--success-color-dark);
       transform: translateY(-1px);
     }
 
     &:active:not(:disabled) {
-      background: #2f855a;
-      border-color: #2f855a;
+      background: var(--success-color-darker);
+      border-color: var(--success-color-darker);
       transform: translateY(0);
     }
 
     &.btn-simple {
       background: transparent;
-      color: #48bb78;
+      color: var(--success-color);
 
       &:hover:not(:disabled) {
-        background: rgba(72, 187, 120, 0.1);
+        background: var(--success-color-light);
       }
     }
   }
 
   &.btn-danger {
-    background: #f56565;
+    background: var(--danger-color);
     color: white;
-    border-color: #f56565;
+    border-color: var(--danger-color);
 
     &:hover:not(:disabled) {
-      background: #e53e3e;
-      border-color: #e53e3e;
+      background: var(--danger-color-dark);
+      border-color: var(--danger-color-dark);
       transform: translateY(-1px);
     }
 
     &:active:not(:disabled) {
-      background: #c53030;
-      border-color: #c53030;
+      background: var(--danger-color-darker);
+      border-color: var(--danger-color-darker);
       transform: translateY(0);
     }
 
     &.btn-simple {
       background: transparent;
-      color: #f56565;
+      color: var(--danger-color);
 
       &:hover:not(:disabled) {
-        background: rgba(245, 101, 101, 0.1);
+        background: var(--danger-color-light);
       }
     }
   }
 
   &.btn-warning {
-    background: #ecc94b;
+    background: var(--warning-color);
     color: white;
-    border-color: #ecc94b;
+    border-color: var(--warning-color);
 
     &:hover:not(:disabled) {
-      background: #d69e2e;
-      border-color: #d69e2e;
+      background: var(--warning-color-dark);
+      border-color: var(--warning-color-dark);
       transform: translateY(-1px);
     }
 
     &:active:not(:disabled) {
-      background: #b7791f;
-      border-color: #b7791f;
+      background: var(--warning-color-darker);
+      border-color: var(--warning-color-darker);
       transform: translateY(0);
     }
 
     &.btn-simple {
       background: transparent;
-      color: #ecc94b;
+      color: var(--warning-color);
 
       &:hover:not(:disabled) {
-        background: rgba(236, 201, 75, 0.1);
+        background: var(--warning-color-light);
       }
     }
   }
@@ -262,7 +262,7 @@ export default {
     }
   }
 
-  // Button variations
+  // Button variants
   &.btn-round {
     border-radius: 9999px;
   }
@@ -290,21 +290,10 @@ export default {
   }
 
   &.btn-fab {
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
     padding: 0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-
-    &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
-
-    &:active:not(:disabled) {
-      transform: translateY(0);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    }
+    border-radius: 50%;
 
     &.btn-sm {
       width: 2.5rem;
@@ -312,37 +301,24 @@ export default {
     }
 
     &.btn-lg {
-      width: 4.5rem;
-      height: 4.5rem;
+      width: 3.5rem;
+      height: 3.5rem;
     }
   }
 
   &.btn-link {
     padding: 0;
-    background: none;
+    background: transparent;
     border: none;
-    color: #4299e1;
-    font-weight: 500;
-    box-shadow: none;
+    color: var(--primary-color);
+    text-decoration: underline;
 
     &:hover:not(:disabled) {
-      text-decoration: underline;
-      transform: none;
+      color: var(--primary-color-dark);
     }
 
-    &:focus {
-      box-shadow: none;
-    }
-  }
-
-  // Dark theme support
-  @media (prefers-color-scheme: dark) {
-    &.btn-link {
-      color: #63b3ed;
-    }
-
-    &:focus {
-      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+    &:active:not(:disabled) {
+      color: var(--primary-color-darker);
     }
   }
 }

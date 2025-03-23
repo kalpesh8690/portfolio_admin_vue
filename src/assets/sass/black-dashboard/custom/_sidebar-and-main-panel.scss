@@ -432,32 +432,36 @@
   min-height: 100vh;
   border-top: 2px solid $primary;
   background: linear-gradient($background-black, $background-states-black);
-  transition: width 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.685, 0.0473, 0.346, 1);
 
   @media screen and (max-width: 991px) {
     width: 100%;
+    float: none;
   }
 
-  &.expanded {
-    width: calc(100% - 60px);
-  }
-
-  > .content {
+  .content {
     padding: 78px 30px 30px 30px;
     min-height: calc(100vh - 70px);
-    transition: padding 0.3s ease;
-
-    @media screen and (max-width: 991px) {
-      padding-left: 30px;
-    }
-  }
-
-  > .navbar {
-    margin-bottom: 0;
+    transition: all 0.3s ease;
   }
 
   .header {
     margin-bottom: 50px;
+  }
+}
+
+// Update main panel width when sidebar is collapsed
+.sidebar.collapsed ~ .main-panel {
+  width: calc(100% - 80px);
+  margin-left: 80px;
+  float: none;
+}
+
+// Full width when sidebar is hidden on mobile
+@media screen and (max-width: 991px) {
+  .sidebar:not(.show) ~ .main-panel {
+    width: 100%;
+    margin-left: 0;
   }
 }
 

@@ -45,7 +45,6 @@
       </template>
     </side-bar>
     <div class="main-panel">
-      <top-navbar></top-navbar>
       <div class="content">
         <router-view></router-view>
       </div>
@@ -55,13 +54,11 @@
 </template>
 
 <script>
-import TopNavbar from "./TopNavbar";
 import ContentFooter from "./ContentFooter.vue";
 
 export default {
   name: 'DashboardLayout',
   components: {
-    TopNavbar,
     ContentFooter,
   },
   methods: {
@@ -75,8 +72,31 @@ export default {
 </script>
 
 <style lang="scss">
+.wrapper {
+  height: 100vh;
+  overflow-x: hidden;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.main-panel {
+  position: relative;
+  float: right;
+  width: calc(100% - 260px);
+  min-height: 100%;
+  background-color: var(--bg-color);
+  transition: background-color 0.3s;
+  
+  @media screen and (max-width: 991px) {
+    width: 100%;
+  }
+}
+
 .content {
-  padding: 20px;
+  padding: 1.5rem;
+  background-color: var(--bg-color);
+  transition: background-color 0.3s;
   
   .mb-4 {
     margin-bottom: 1.5rem;
