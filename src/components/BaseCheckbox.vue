@@ -107,11 +107,12 @@ export default {
 <style lang="scss" scoped>
 .checkbox-wrapper {
   position: relative;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 
   &.is-inline {
     display: inline-flex;
-    margin-right: 1rem;
+    margin-right: 1.5rem;
+    margin-bottom: 0;
   }
 
   &.is-disabled {
@@ -132,6 +133,14 @@ export default {
   padding: 0.25rem 0;
   margin: 0;
   user-select: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    .checkbox-control {
+      border-color: var(--primary-color-light);
+      transform: scale(1.05);
+    }
+  }
 }
 
 .checkbox-input {
@@ -141,12 +150,14 @@ export default {
   height: 0;
 
   &:focus + .checkbox-control {
-    box-shadow: 0 0 0 3px var(--primary-color-light);
+    box-shadow: 0 0 0 4px var(--primary-color-light);
+    border-color: var(--primary-color);
   }
 
   &:checked + .checkbox-control {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
+    transform: scale(1.05);
 
     .checkbox-check {
       transform: scale(1);
@@ -157,6 +168,8 @@ export default {
   &:disabled + .checkbox-control {
     background-color: var(--bg-color-secondary);
     border-color: var(--border-color);
+    cursor: not-allowed;
+    transform: none;
   }
 }
 
@@ -165,34 +178,73 @@ export default {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.375rem;
+  height: 1.375rem;
   border: 2px solid var(--border-color);
-  border-radius: 0.25rem;
+  border-radius: 0.375rem;
   background-color: var(--bg-color);
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
 
   .checkbox-check {
-    width: 0.75rem;
-    height: 0.75rem;
+    width: 0.875rem;
+    height: 0.875rem;
     color: white;
     transform: scale(0);
     opacity: 0;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
 .checkbox-text {
-  padding-left: 0.75rem;
-  font-size: 0.875rem;
+  padding-left: 0.875rem;
+  font-size: 0.9375rem;
   color: var(--text-color);
-  line-height: 1.25;
+  line-height: 1.5;
+  transition: color 0.3s ease;
 }
 
 .checkbox-error {
-  margin-top: 0.25rem;
-  font-size: 0.75rem;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
   color: var(--danger-color);
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+
+  &::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: var(--danger-color);
+    border-radius: 50%;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .checkbox-wrapper {
+    margin-bottom: 1rem;
+
+    &.is-inline {
+      margin-right: 1.25rem;
+    }
+  }
+
+  .checkbox-control {
+    width: 1.25rem;
+    height: 1.25rem;
+
+    .checkbox-check {
+      width: 0.75rem;
+      height: 0.75rem;
+    }
+  }
+
+  .checkbox-text {
+    font-size: 0.875rem;
+    padding-left: 0.75rem;
+  }
 }
 
 // Dark theme support

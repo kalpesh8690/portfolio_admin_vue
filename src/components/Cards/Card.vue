@@ -79,25 +79,43 @@ export default {
 
 <style lang="scss" scoped>
 .card {
-  background: linear-gradient(145deg, var(--card-bg), var(--bg-color-secondary));
-  border-radius: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   margin-bottom: 24px;
   position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid var(--border-color);
   overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-color-light));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
 
   &.card-hover {
     &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-      background: linear-gradient(145deg, var(--card-bg), var(--bg-color));
+      transform: translateY(-8px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      border-color: var(--primary-color-light);
+
+      &::before {
+        opacity: 1;
+      }
     }
 
     &:active {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
   }
 
@@ -109,132 +127,169 @@ export default {
     
     img {
       width: 100%;
-      border-radius: 15px 15px 0 0;
-      transition: transform 0.3s ease;
+      border-radius: 20px 20px 0 0;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      object-fit: cover;
+      aspect-ratio: 16/9;
 
       &:hover {
         transform: scale(1.05);
       }
     }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    &:hover::after {
+      opacity: 1;
+    }
   }
 
   .card-header {
-    padding: 1.25rem 1.5rem;
+    padding: 1.75rem;
     border-bottom: 1px solid var(--border-color);
-    background: linear-gradient(to right, var(--card-bg), transparent);
-    transition: all 0.3s ease;
+    background: var(--card-bg);
+    transition: all 0.4s ease;
 
     &:first-child {
-      border-radius: 15px 15px 0 0;
+      border-radius: 20px 20px 0 0;
     }
 
     .card-title {
-      margin-bottom: 0.5rem;
-      font-size: 1.25rem;
-      font-weight: 600;
+      margin-bottom: 0.75rem;
+      font-size: 1.375rem;
+      font-weight: 700;
       color: var(--text-color);
-      line-height: 1.2;
-      transition: color 0.3s ease;
+      line-height: 1.3;
+      transition: color 0.4s ease;
+      letter-spacing: -0.025em;
     }
 
     .card-category {
       margin: 0;
       font-size: 0.875rem;
       color: var(--text-color-secondary);
-      transition: color 0.3s ease;
+      transition: color 0.4s ease;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &::before {
+        content: '';
+        width: 4px;
+        height: 4px;
+        background: var(--primary-color);
+        border-radius: 50%;
+        opacity: 0.5;
+      }
     }
   }
 
   .card-body {
-    padding: 1.5rem;
+    padding: 1.75rem;
     flex: 1 1 auto;
     color: var(--text-color);
-    font-size: 0.875rem;
-    line-height: 1.5;
-    transition: color 0.3s ease;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    transition: color 0.4s ease;
     background: var(--card-bg);
   }
 
   .card-footer {
-    padding: 1.25rem 1.5rem;
-    background: linear-gradient(to right, transparent, var(--card-bg));
+    padding: 1.5rem;
+    background: var(--card-bg);
     border-top: 1px solid var(--border-color);
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
 
     &:last-child {
-      border-radius: 0 0 15px 15px;
+      border-radius: 0 0 20px 20px;
     }
   }
 
   // Card types with enhanced hover effects
   &.card-primary {
     border-top: 3px solid var(--primary-color);
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
 
     &:hover {
       border-top-color: var(--primary-color-dark);
-      background: linear-gradient(145deg, var(--card-bg), var(--primary-color-light));
+      box-shadow: 0 20px 25px -5px rgba(var(--primary-color-rgb), 0.15), 0 10px 10px -5px rgba(var(--primary-color-rgb), 0.1);
     }
   }
 
   &.card-success {
     border-top: 3px solid var(--success-color);
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
 
     &:hover {
       border-top-color: var(--success-color-dark);
-      background: linear-gradient(145deg, var(--card-bg), var(--success-color-light));
+      box-shadow: 0 20px 25px -5px rgba(var(--success-color-rgb), 0.15), 0 10px 10px -5px rgba(var(--success-color-rgb), 0.1);
     }
   }
 
   &.card-warning {
     border-top: 3px solid var(--warning-color);
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
 
     &:hover {
       border-top-color: var(--warning-color-dark);
-      background: linear-gradient(145deg, var(--card-bg), var(--warning-color-light));
+      box-shadow: 0 20px 25px -5px rgba(var(--warning-color-rgb), 0.15), 0 10px 10px -5px rgba(var(--warning-color-rgb), 0.1);
     }
   }
 
   &.card-danger {
     border-top: 3px solid var(--danger-color);
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
 
     &:hover {
       border-top-color: var(--danger-color-dark);
-      background: linear-gradient(145deg, var(--card-bg), var(--danger-color-light));
+      box-shadow: 0 20px 25px -5px rgba(var(--danger-color-rgb), 0.15), 0 10px 10px -5px rgba(var(--danger-color-rgb), 0.1);
     }
   }
 
   &.card-info {
     border-top: 3px solid var(--info-color);
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
 
     &:hover {
       border-top-color: var(--info-color-dark);
-      background: linear-gradient(145deg, var(--card-bg), var(--info-color-light));
+      box-shadow: 0 20px 25px -5px rgba(var(--info-color-rgb), 0.15), 0 10px 10px -5px rgba(var(--info-color-rgb), 0.1);
     }
   }
 
   // Responsive adjustments
   @media (max-width: 768px) {
     margin-bottom: 16px;
+    border-radius: 16px;
 
     .card-header {
-      padding: 1rem 1.25rem;
+      padding: 1.5rem;
 
       .card-title {
-        font-size: 1.125rem;
+        font-size: 1.25rem;
       }
     }
 
     .card-body {
-      padding: 1.25rem;
+      padding: 1.5rem;
     }
 
     .card-footer {
-      padding: 1rem 1.25rem;
+      padding: 1.25rem;
+    }
+
+    .card-image img {
+      border-radius: 16px 16px 0 0;
     }
   }
 }

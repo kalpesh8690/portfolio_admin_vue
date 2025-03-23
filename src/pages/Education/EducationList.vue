@@ -1,6 +1,6 @@
 <template>
   <base-card>
-    <h6 slot="header" class="title">Education History</h6>
+    <h6 slot="header" class="card-title">Education History</h6>
     <div class="education-list">
       <div v-if="educationList.length === 0" class="no-data">
         No education records found.

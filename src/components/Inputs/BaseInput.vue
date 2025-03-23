@@ -174,15 +174,17 @@ export default {
 
   .form-label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
+    margin-bottom: 0.75rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
     color: var(--text-color);
-    transition: color 0.2s ease;
+    transition: all 0.3s ease;
+    letter-spacing: -0.01em;
 
     .required-indicator {
       color: var(--danger-color);
       margin-left: 0.25rem;
+      font-weight: 700;
     }
   }
 
@@ -190,29 +192,35 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
+    background: var(--bg-color);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+
+    &:hover {
+      border-color: var(--primary-color-light);
+    }
   }
 
   .form-control {
     display: block;
     width: 100%;
-    padding: 0.625rem 1rem;
-    font-size: 0.875rem;
+    padding: 0.875rem 1.25rem;
+    font-size: 0.9375rem;
     line-height: 1.5;
     color: var(--text-color);
-    background-color: var(--bg-color);
-    background-clip: padding-box;
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-    transition: all 0.2s ease;
+    background-color: transparent;
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
 
     &::placeholder {
       color: var(--text-color-secondary);
+      opacity: 0.7;
     }
 
     &:focus {
       outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px var(--primary-color-light);
     }
 
     &:disabled {
@@ -227,29 +235,29 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-color-secondary);
-    transition: color 0.2s ease;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.5rem;
+    width: 3rem;
     pointer-events: none;
 
     &.input-icon-left {
       left: 0;
       + .form-control {
-        padding-left: 2.5rem;
+        padding-left: 3rem;
       }
     }
 
     &.input-icon-right {
       right: 0;
       + .form-control {
-        padding-right: 2.5rem;
+        padding-right: 3rem;
       }
     }
 
     i {
-      font-size: 1rem;
+      font-size: 1.125rem;
     }
   }
 
@@ -260,35 +268,62 @@ export default {
     transform: translateY(-50%);
     color: var(--text-color-secondary);
     cursor: pointer;
-    padding: 0.25rem;
+    padding: 0.5rem;
     border-radius: 50%;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: transparent;
 
     &:hover {
       background-color: var(--hover-bg);
       color: var(--text-color);
+      transform: translateY(-50%) scale(1.1);
     }
 
     svg {
-      width: 1rem;
-      height: 1rem;
+      width: 1.125rem;
+      height: 1.125rem;
     }
   }
 
   .helper-text {
-    margin-top: 0.25rem;
-    font-size: 0.75rem;
-    line-height: 1.25;
+    margin-top: 0.5rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 
     .error-text {
       color: var(--danger-color);
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+
+      &::before {
+        content: '';
+        width: 4px;
+        height: 4px;
+        background: var(--danger-color);
+        border-radius: 50%;
+      }
     }
 
     .success-text {
       color: var(--success-color);
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+
+      &::before {
+        content: '';
+        width: 4px;
+        height: 4px;
+        background: var(--success-color);
+        border-radius: 50%;
+      }
     }
 
     .helper-text {
@@ -301,14 +336,21 @@ export default {
     .form-label {
       color: var(--primary-color);
     }
+
+    .input-wrapper {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px var(--primary-color-light);
+    }
+
+    .input-icon {
+      color: var(--primary-color);
+    }
   }
 
   &.has-error {
-    .form-control {
+    .input-wrapper {
       border-color: var(--danger-color);
-      &:focus {
-        box-shadow: 0 0 0 3px var(--danger-color-light);
-      }
+      box-shadow: 0 0 0 4px var(--danger-color-light);
     }
 
     .input-icon {
@@ -317,11 +359,9 @@ export default {
   }
 
   &.is-success {
-    .form-control {
+    .input-wrapper {
       border-color: var(--success-color);
-      &:focus {
-        box-shadow: 0 0 0 3px var(--success-color-light);
-      }
+      box-shadow: 0 0 0 4px var(--success-color-light);
     }
 
     .input-icon {
@@ -330,10 +370,9 @@ export default {
   }
 
   &.is-disabled {
-    .form-control {
+    .input-wrapper {
       background-color: var(--bg-color-secondary);
-      cursor: not-allowed;
-      opacity: 0.7;
+      border-color: var(--border-color);
     }
 
     .input-icon {
@@ -341,51 +380,29 @@ export default {
     }
   }
 
-  // Dark theme support
-  @media (prefers-color-scheme: dark) {
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    margin-bottom: 1.25rem;
+
     .form-label {
-      color: #e2e8f0;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
     }
 
     .form-control {
-      color: #f7fafc;
-      background-color: #2d3748;
-      border-color: #4a5568;
-
-      &::placeholder {
-        color: #718096;
-      }
-
-      &:focus {
-        border-color: #63b3ed;
-        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
-      }
-
-      &:disabled {
-        background-color: #1a202c;
-      }
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
     }
 
     .input-icon {
-      color: #718096;
-    }
+      width: 2.5rem;
 
-    .clear-button {
-      color: #718096;
-
-      &:hover {
-        color: #e2e8f0;
-        background-color: #4a5568;
-      }
-    }
-
-    &.is-focused {
-      .form-label {
-        color: #63b3ed;
+      &.input-icon-left + .form-control {
+        padding-left: 2.5rem;
       }
 
-      .input-icon {
-        color: #63b3ed;
+      &.input-icon-right + .form-control {
+        padding-right: 2.5rem;
       }
     }
   }

@@ -3,8 +3,15 @@
     <div class="navbar-container">
       <!-- Left side -->
       <div class="navbar-left">
-        <button class="menu-toggle" @click="toggleSidebar" v-if="showSidebarToggle">
-          <i class="fas fa-bars"></i>
+        <button 
+          class="menu-toggle" 
+          :class="{ 'is-active': isSidebarOpen }"
+          @click="toggleSidebar" 
+          v-if="showSidebarToggle"
+        >
+          <transition name="icon-transition" mode="out-in">
+            <i :key="isSidebarOpen" :class="isSidebarOpen ? 'fas fa-times' : 'fas fa-bars'"></i>
+          </transition>
         </button>
         <span class="page-title">{{ pageTitle }}</span>
       </div>
@@ -220,22 +227,56 @@ export default {
   .navbar-left {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 16px;
 
     .menu-toggle {
       background: none;
       border: none;
-      color: var(--text-color);
-      font-size: 1.25rem;
+      padding: 8px;
       cursor: pointer;
-      padding: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: color 0.2s ease;
+      color: var(--text-color);
+      border-radius: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        background: var(--primary-color-light);
+        border-radius: 8px;
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
       &:hover {
         color: var(--primary-color);
+        
+        &::before {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.1;
+        }
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      i {
+        font-size: 20px;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      &.is-active {
+        i {
+          transform: rotate(180deg);
+        }
       }
     }
 
@@ -243,6 +284,7 @@ export default {
       font-size: 1.25rem;
       font-weight: 600;
       color: var(--text-color);
+      transition: color 0.3s ease;
     }
   }
 
@@ -505,5 +547,27 @@ export default {
   100% {
     transform: scale(1);
   }
+}
+
+/* Icon Transition Animation */
+.icon-transition-enter-active,
+.icon-transition-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icon-transition-enter {
+  transform: rotate(-180deg) scale(0.6);
+  opacity: 0;
+}
+
+.icon-transition-leave-to {
+  transform: rotate(180deg) scale(0.6);
+  opacity: 0;
+}
+
+.icon-transition-enter-to,
+.icon-transition-leave {
+  transform: rotate(0) scale(1);
+  opacity: 1;
 }
 </style>

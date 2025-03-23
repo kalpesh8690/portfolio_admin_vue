@@ -1,6 +1,6 @@
 <template>
   <base-card>
-    <h6 slot="header" class="title">{{ isEditing ? 'Edit Education' : 'Add Education' }}</h6>
+    <h6 slot="header" class="card-title">{{ isEditing ? 'Edit Education' : 'Add Education' }}</h6>
     <form @submit.prevent="handleSubmit">
       <div class="row">
         <div class="col-md-6 pr-md-1">

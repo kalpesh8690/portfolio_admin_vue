@@ -257,34 +257,38 @@ export default {
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
     z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
 
   .dialog-container {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.95);
     width: 90%;
     max-width: 800px;
     max-height: 80vh;
-    background: white;
-    border-radius: 12px;
+    background: var(--card-bg);
+    border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     z-index: 1001;
     display: flex;
     flex-direction: column;
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &.dialog-active {
       opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
     }
   }
 
   .dialog-header {
-    padding: 20px;
-    border-bottom: 1px solid #eee;
+    padding: 24px;
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     gap: 16px;
@@ -296,25 +300,34 @@ export default {
 
     .search-input {
       width: 100%;
-      padding: 12px 40px 12px 16px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      padding: 16px 48px 16px 20px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
       font-size: 16px;
+      background: var(--bg-color);
+      color: var(--text-color);
       transition: all 0.3s ease;
+
+      &::placeholder {
+        color: var(--text-color-secondary);
+        opacity: 0.7;
+      }
 
       &:focus {
         outline: none;
-        border-color: #e14eca;
-        box-shadow: 0 0 0 2px rgba(225, 78, 202, 0.1);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px var(--primary-color-light);
       }
     }
 
     .search-icon {
       position: absolute;
-      right: 16px;
+      right: 20px;
       top: 50%;
       transform: translateY(-50%);
-      color: #666;
+      color: var(--text-color-secondary);
+      font-size: 20px;
+      transition: color 0.3s ease;
     }
 
     .close-button {
@@ -322,24 +335,30 @@ export default {
       border: none;
       padding: 8px;
       cursor: pointer;
-      color: #666;
-      transition: color 0.2s ease;
+      color: var(--text-color-secondary);
+      transition: all 0.3s ease;
+      border-radius: 8px;
 
       &:hover {
-        color: #333;
+        color: var(--text-color);
+        background: var(--hover-bg);
+      }
+
+      i {
+        font-size: 20px;
       }
     }
   }
 
   .dialog-body {
-    padding: 20px;
+    padding: 24px;
     overflow-y: auto;
     flex: 1;
   }
 
   .search-results {
     .result-section {
-      margin-bottom: 24px;
+      margin-bottom: 32px;
 
       &:last-child {
         margin-bottom: 0;
@@ -347,9 +366,10 @@ export default {
     }
 
     .section-title {
-      color: #e14eca;
+      color: var(--primary-color);
       font-size: 14px;
-      margin-bottom: 12px;
+      font-weight: 600;
+      margin-bottom: 16px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       display: flex;
@@ -357,22 +377,23 @@ export default {
       gap: 8px;
 
       i {
-        font-size: 16px;
+        font-size: 18px;
       }
     }
 
     .result-item {
-      padding: 12px;
+      padding: 16px;
       margin: 8px 0;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: all 0.2s ease;
-      border: 1px solid #eee;
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-color);
+      background: var(--bg-color);
 
       &:hover {
-        background-color: #f8f9fa;
-        border-color: #e14eca;
-        transform: translateY(-1px);
+        background: var(--hover-bg);
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       }
     }
@@ -381,13 +402,15 @@ export default {
       h4 {
         margin: 0;
         font-size: 16px;
-        color: #333;
+        font-weight: 600;
+        color: var(--text-color);
       }
 
       .result-description {
-        margin: 4px 0 0;
+        margin: 8px 0 0;
         font-size: 14px;
-        color: #666;
+        color: var(--text-color-secondary);
+        line-height: 1.5;
       }
     }
   }
@@ -396,13 +419,14 @@ export default {
   .no-results,
   .initial-state {
     text-align: center;
-    padding: 40px 20px;
-    color: #666;
+    padding: 48px 24px;
+    color: var(--text-color-secondary);
 
     i {
-      font-size: 24px;
-      margin-bottom: 16px;
-      color: #e14eca;
+      font-size: 32px;
+      margin-bottom: 24px;
+      color: var(--primary-color);
+      opacity: 0.8;
 
       &.spin {
         animation: spin 1s linear infinite;
@@ -411,19 +435,25 @@ export default {
 
     p {
       margin: 8px 0;
+      font-size: 16px;
     }
   }
 
   .search-tips {
-    margin-top: 24px;
+    margin-top: 32px;
     text-align: left;
-    max-width: 300px;
+    max-width: 400px;
     margin-left: auto;
     margin-right: auto;
+    background: var(--bg-color-secondary);
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
 
     p {
-      margin-bottom: 8px;
-      color: #333;
+      margin-bottom: 16px;
+      color: var(--text-color);
+      font-weight: 600;
     }
 
     ul {
@@ -434,13 +464,19 @@ export default {
       li {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 4px 0;
-        color: #666;
+        gap: 12px;
+        padding: 8px 0;
+        color: var(--text-color-secondary);
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: var(--text-color);
+        }
 
         i {
-          font-size: 16px;
+          font-size: 18px;
           margin: 0;
+          color: var(--primary-color);
         }
       }
     }
@@ -448,8 +484,9 @@ export default {
 
   .suggestion {
     font-size: 14px;
-    color: #999;
-    margin-top: 8px;
+    color: var(--text-color-secondary);
+    margin-top: 12px;
+    opacity: 0.8;
   }
 }
 
@@ -464,11 +501,11 @@ export default {
 
 @keyframes highlightAnimation {
   0% {
-    background-color: rgba(225, 78, 202, 0.2);
+    background-color: var(--primary-color-light);
     transform: scale(1);
   }
   50% {
-    background-color: rgba(225, 78, 202, 0.1);
+    background-color: var(--primary-color-light);
     transform: scale(1.02);
   }
   100% {
@@ -479,5 +516,47 @@ export default {
 
 :global(.search-highlight) {
   animation: highlightAnimation 2s ease-out;
+}
+
+@media (max-width: 768px) {
+  .search-dialog {
+    .dialog-container {
+      width: 95%;
+      max-height: 90vh;
+      border-radius: 16px;
+    }
+
+    .dialog-header {
+      padding: 16px;
+    }
+
+    .dialog-body {
+      padding: 16px;
+    }
+
+    .search-input {
+      padding: 12px 40px 12px 16px;
+      font-size: 14px;
+    }
+
+    .search-icon {
+      right: 16px;
+      font-size: 18px;
+    }
+
+    .result-item {
+      padding: 12px;
+    }
+
+    .result-content {
+      h4 {
+        font-size: 14px;
+      }
+
+      .result-description {
+        font-size: 12px;
+      }
+    }
+  }
 }
 </style> 
