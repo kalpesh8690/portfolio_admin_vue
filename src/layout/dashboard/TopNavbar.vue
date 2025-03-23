@@ -198,6 +198,8 @@ export default {
     },
     logout() {
       // Implement logout functionality
+      localStorage.removeItem('token');
+      this.$router.push('/login');
       console.log('Logging out...');
     },
     handleKeyPress(event) {
