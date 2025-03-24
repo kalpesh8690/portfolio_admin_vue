@@ -32,12 +32,13 @@ const actions = {
     }
   },
 
-  async updateSkill({ commit }, { id, data }) {
+  async updateSkill({ commit },skillData) {
     commit('SET_LOADING', true)
     commit('SET_ERROR', null)
     try {
-      const response = await apis.SkillAPI.updateSkill(id, data)
-      commit('UPDATE_SKILL', response.data.data)
+      const response = await apis.SkillAPI.updateSkill(skillData)
+      const resSkills = await apis.SkillAPI.getSkills()
+      commit('SET_SKILLS', resSkills.data.data)
       return Promise.resolve(response)
     } catch (error) {
       commit('SET_ERROR', error.message || 'Failed to update skill')

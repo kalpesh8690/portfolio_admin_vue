@@ -190,6 +190,12 @@ export default {
   components: {
     BaseIconPicker
   },
+  props: {
+    editData: {
+      type: Object,
+      default: () => null
+    }
+  },
   data() {
     return {
       skillForm: {
@@ -300,7 +306,33 @@ export default {
       }
     }
   },
+  watch: {
+    editData: {
+      immediate: true,
+      handler(newData) {
+        if (newData) {
+          
+          this.setEditData(newData);
+        }
+      }
+    }
+  },
   methods: {
+    setEditData(data) {
+      this.skillForm = {
+        name: data.name || '',
+        category: data.category || '',
+        proficiency: data.proficiency || 50,
+        icon: data.icon || '',
+        color: data.color || '#5e72e4',
+        featured: data.featured || false,
+        order: data.order || 0,
+        yearsOfExperience: data.yearsOfExperience || 0,
+        description: data.description || ''
+      };
+      this.isEditing = true;
+      this.editIndex = data.index;
+    },
     getCategoryIcon(category) {
       const found = this.skillCategories.find(c => c.value === category);
       return found ? found.icon : 'fas fa-folder';
@@ -386,7 +418,8 @@ export default {
       const skill = { ...this.skillForm }
       if (this.isEditing) {
         // If editing, emit the update event
-        this.$emit('save-skill', { skill, index: this.editIndex })
+        await this.$store.dispatch('skills/updateSkill', {_id:this.editData._id, ...skill})
+        this.resetForm()
       } else {
         // If creating new, dispatch the createSkill action
         // console.log(skill,"skilldata")
@@ -409,11 +442,6 @@ export default {
       this.isEditing = false
       this.editIndex = -1
       this.$emit('cancel-edit')
-    },
-    editSkill(skill, index) {
-      this.skillForm = { ...skill }
-      this.isEditing = true
-      this.editIndex = index
     },
     validateColor(event) {
       const color = event.target.value;

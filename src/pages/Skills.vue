@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-8">
         <edit-skill-form
-          :skill="currentSkill"
+          :editData="currentSkill"
           @save-skill="saveSkill"
           @cancel="cancelEdit"
         />
