@@ -7,6 +7,7 @@ import store from "./store";
 import router from "./router/index";
 import "./registerServiceWorker";
 import '@fortawesome/fontawesome-free/css/all.css'
+import './assets/css/tailwind.css'
 
 // Use plugins
 Vue.use(BlackDashboard);

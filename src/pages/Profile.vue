@@ -7,7 +7,7 @@
           <div class="text-center">
             <img :src="user.profile || '/default-avatar.png'" alt="Profile Avatar" class="profile-avatar">
             <h3 class="mt-3">{{ user.firstName }}</h3>
-            <p class="title">{{ profile.title }}</p>
+            <p class="title">{{ user.hasOwnProperty('userDetails')?user.userDetails.position:profile.position }}</p>
             <p class="availability">{{ profile.availability }}</p>
             <base-button type="primary" class="btn-simple" @click="showEditForm = true">
               <i class="tim-icons icon-pencil"></i> Edit Profile
@@ -25,22 +25,15 @@
             </div>
             <div class="info-item">
               <i class="tim-icons icon-pin"></i>
-              <span>{{ contactInfo.location }}</span>
+              <span>{{ user.hasOwnProperty('userDetails') ? `${user.userDetails.address} ,${user.userDetails.city}
+                ${user.userDetails.state} ,${user.userDetails.country} ${user.userDetails.pincode}`:"Null" }}</span>
             </div>
           </div>
           <div class="profile-section">
             <h6 class="section-title">Social Links</h6>
-            <div class="info-item">
+            <div class="info-item" v-for="(item,index) in user.userDetails.socialLinks" :key="index">
               <i class="tim-icons icon-world"></i>
-              <a :href="socialLinks.website" target="_blank">Personal Website</a>
-            </div>
-            <div class="info-item">
-              <i class="tim-icons icon-cloud-download-93"></i>
-              <a :href="socialLinks.github" target="_blank">GitHub</a>
-            </div>
-            <div class="info-item">
-              <i class="tim-icons icon-single-02"></i>
-              <a :href="socialLinks.linkedin" target="_blank">LinkedIn</a>
+              <a :href="item" v-bind:key="item" target="_blank">{{ (index).toString().toUpperCase() }}</a>
             </div>
           </div>
         </base-card>
@@ -51,14 +44,12 @@
         <base-card v-if="!showEditForm">
           <h4 slot="header" class="card-title">About Me</h4>
           <div class="bio-section">
-            <p class="bio">{{ profile.bio }}</p>
+            <p class="bio">{{ user.userDetails.about }}</p>
           </div>
           <div class="interests-section">
             <h5>Interests</h5>
             <div class="interests-list">
-              <span v-for="interest in profile.interests" 
-                    :key="interest" 
-                    class="interest-tag">
+              <span v-for="interest in profile.interests" :key="interest" class="interest-tag">
                 {{ interest }}
               </span>
             </div>
@@ -66,11 +57,7 @@
         </base-card>
 
         <!-- Edit Form -->
-        <edit-profile-form 
-          v-if="showEditForm" 
-          :initial-data="user"
-          @submit="handleEditSubmit" 
-        />
+        <edit-profile-form v-if="showEditForm" :initial-data="user" @submit="handleEditSubmit" />
 
         <!-- Professional Summary -->
         <base-card class="mt-4" v-if="!showEditForm">
@@ -111,6 +98,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex'
 import EditProfileForm from './Profile/EditProfileForm.vue'
 
+
 export default {
   name: 'profile-page',
   components: {
@@ -143,6 +131,9 @@ export default {
         console.error('Failed to update profile:', error);
       }
     }
+  },
+  mounted() {
+    console.log(this.user, "USER_PROFILE")
   }
 }
 </script>

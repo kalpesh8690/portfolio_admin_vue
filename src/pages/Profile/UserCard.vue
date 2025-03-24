@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   name: "user-card",
   props: {
@@ -67,8 +68,14 @@ export default {
         following: 0
       })
     }
+  },
+  computed: {
+    ...mapState('auth', ['user'])
+  },
+  mounted(){
+    console.log("USERCARD_USER",this.user)
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
