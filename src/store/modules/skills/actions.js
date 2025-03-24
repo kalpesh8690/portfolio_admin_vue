@@ -1,48 +1,66 @@
-import apis from '@/apis' // Adjust the path as per your project structure
+import apis from '@/apis'
 
 const actions = {
-  async createSkill({ commit }, payload) {
+  async fetchSkills({ commit }, params = {}) {
+    commit('SET_LOADING', true)
+    commit('SET_ERROR', null)
     try {
-      const result = await apis.SkillAPI.addSkill(payload)
-      commit('CREATE_SKILL', result.data) 
-      return Promise.resolve(result) // Resolve with the fetched data
+      const response = await apis.SkillAPI.getSkills(params)
+      commit('SET_SKILLS', response.data.data)
+      return Promise.resolve(response)
     } catch (error) {
-      console.error('API Error:', error)
-      return Promise.reject(error) // Reject with the error
+      commit('SET_ERROR', error.message || 'Failed to fetch skills')
+      return Promise.reject(error)
+    } finally {
+      commit('SET_LOADING', false)
     }
   },
-  async getSkills({ commit }, payload) {
-    try {
-      const result = await apis.SkillAPI.getSkills(payload)
 
-      commit('GET_SKILLS', result.data)
-      return Promise.resolve(result) // Resolve with the logged-in user data
+  async createSkill({ commit }, skillData) {
+    commit('SET_LOADING', true)
+    commit('SET_ERROR', null)
+    try {
+      const response = await apis.SkillAPI.addSkill(skillData)
+      const resSkills = await apis.SkillAPI.getSkills()
+      commit('SET_SKILLS', resSkills.data.data)
+      return Promise.resolve(response)
     } catch (error) {
-      console.error('API Error:', error)
-      return Promise.reject(error) // Reject with the error
+      commit('SET_ERROR', error.message || 'Failed to create skill')
+      return Promise.reject(error)
+    } finally {
+      commit('SET_LOADING', false)
     }
   },
-  async updateSkill({ commit }, payload) {
-    try {
-      const result = await apis.SkillAPI.updateSkill(payload)
 
-      commit('UPDATE_SKILL', result.data.data)
-      return Promise.resolve(result) // Resolve with the logged-in user data
-    } catch (error) {
-      console.error('API Error:', error)
-      return Promise.reject(error) // Reject with the error
-    }
-  },
-  async deleteSkill({ commit }, payload) {
+  async updateSkill({ commit }, { id, data }) {
+    commit('SET_LOADING', true)
+    commit('SET_ERROR', null)
     try {
-      const result = await apis.SkillAPI.deleteSkill(payload)
-      return Promise.resolve(result.data) // Resolve with the logout result data
+      const response = await apis.SkillAPI.updateSkill(id, data)
+      commit('UPDATE_SKILL', response.data.data)
+      return Promise.resolve(response)
     } catch (error) {
-      console.error('API Error:', error)
-      return Promise.reject(error) // Reject with the error
+      commit('SET_ERROR', error.message || 'Failed to update skill')
+      return Promise.reject(error)
+    } finally {
+      commit('SET_LOADING', false)
     }
   },
-  
+
+  async deleteSkill({ commit }, id) {
+    commit('SET_LOADING', true)
+    commit('SET_ERROR', null)
+    try {
+      const response = await apis.SkillAPI.deleteSkill(id)
+      commit('DELETE_SKILL', id)
+      return Promise.resolve(response)
+    } catch (error) {
+      commit('SET_ERROR', error.message || 'Failed to delete skill')
+      return Promise.reject(error)
+    } finally {
+      commit('SET_LOADING', false)
+    }
+  }
 }
 
 export default actions 

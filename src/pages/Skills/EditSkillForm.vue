@@ -368,11 +368,17 @@ export default {
       this.icons = fallbackIcons;
       fallbackIcons.forEach(icon => this.iconCache.set(icon.value, icon));
     },
-    handleSubmit() {
+   async  handleSubmit() {
       const skill = { ...this.skillForm }
-      console.log(skill,"skill")
-      // this.$emit('save-skill', { skill, index: this.editIndex })
-      // this.resetForm()
+      if (this.isEditing) {
+        // If editing, emit the update event
+        this.$emit('save-skill', { skill, index: this.editIndex })
+      } else {
+        // If creating new, dispatch the createSkill action
+        // console.log(skill,"skilldata")
+        await this.$store.dispatch('skills/createSkill', skill)
+        this.resetForm()
+      }
     },
     resetForm() {
       this.skillForm = {

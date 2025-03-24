@@ -10,7 +10,7 @@ const dir = '/skills/'
 
 const SkillAPI = {
   getSkills() {
-    return Repository.get(`${dir}` + GET_SKILLS)
+    return Repository.post(`${dir}` + GET_SKILLS)
   },
 
   addSkill(payload) {
@@ -18,11 +18,11 @@ const SkillAPI = {
   },
 
   deleteSkill(id) {
-    return Repository.delete(`${dir}` + DELETE_SKILL + `/${id}`)
+    return Repository.post(`${dir}` + DELETE_SKILL + `/${id}`)
   },
 
   updateSkill(payload) {
-    return Repository.put(`${dir}` + UPDATE_SKILL, payload)
+    return Repository.post(`${dir}` + UPDATE_SKILL, payload)
   },
 }
 
