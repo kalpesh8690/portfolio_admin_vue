@@ -317,12 +317,12 @@ export default {
           : color;
         // Emit preview update
         this.$emit('preview', {
-          icon: this.tempIcon,
+          icon: this.tempIcon || this.modelValue?.icon || '',
           color: this.tempColor
         });
         // Emit v-model update
         this.$emit('update:modelValue', {
-          ...this.modelValue,
+          icon: this.tempIcon || this.modelValue?.icon || '',
           color: this.tempColor
         });
       }
@@ -331,12 +331,12 @@ export default {
       this.tempColor = color;
       // Emit preview update
       this.$emit('preview', {
-        icon: this.tempIcon,
+        icon: this.tempIcon || this.modelValue?.icon || '',
         color: this.tempColor
       });
       // Emit v-model update
       this.$emit('update:modelValue', {
-        ...this.modelValue,
+        icon: this.tempIcon || this.modelValue?.icon || '',
         color: this.tempColor
       });
     },
@@ -368,13 +368,12 @@ export default {
       // Update preview immediately
       this.$emit('preview', {
         icon: iconValue,
-        color: this.tempColor
+        color: this.tempColor || this.modelValue?.color || '#5e72e4'
       });
       // Emit update for v-model
-      this.$emit('update:modelValue', {
-        ...this.modelValue,
+      this.$emit('update', {
         icon: iconValue,
-        color: this.tempColor
+        color: this.tempColor || this.modelValue?.color || '#5e72e4'
       });
       // Focus the selected icon for keyboard navigation
       this.$nextTick(() => {
@@ -530,7 +529,7 @@ export default {
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-secondary);
+  color:  #6c757d;
   font-size: 0.875rem;
 }
 

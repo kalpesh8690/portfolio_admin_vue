@@ -2,7 +2,7 @@
   <div class="icon-picker-container">
     <base-icon-picker
         :model-value="{ icon: skillForm.icon, color: skillForm.color }"
-        @update:model-value="updateIconAndColor"
+        @update="updateIconAndColor"
         :show="isPickerDialogOpen"
         @update:show="isPickerDialogOpen = $event"
         title="Select Icon and Color"
@@ -81,6 +81,33 @@
                 </div>
               </div>
               <i class="fas fa-chevron-right preview-arrow"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-control-label">Proficiency Level</label>
+              <div class="proficiency-slider">
+                <input 
+                  type="range" 
+                  v-model.number="skillForm.proficiency" 
+                  min="0" 
+                  max="100" 
+                  step="5"
+                  class="proficiency-input"
+                >
+                <div class="proficiency-labels">
+                  <span>Beginner</span>
+                  <span>Intermediate</span>
+                  <span>Advanced</span>
+                  <span>Expert</span>
+                </div>
+                <div class="proficiency-value">
+                  {{ skillForm.proficiency }}%
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -412,6 +439,7 @@ export default {
       this.closePickerDialog();
     },
     updateIconAndColor(value) {
+      console.log(value,"value")
       this.skillForm.icon = value.icon;
       this.skillForm.color = value.color;
     },
@@ -470,33 +498,34 @@ export default {
 }
 
 .proficiency-slider {
-  padding: 1rem 0;
-  background: #f8f9fe;
-  border-radius: 8px;
   padding: 1rem;
+  background: var(--input-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
 }
 
-.proficiency-slider input[type="range"] {
+.proficiency-input {
   width: 100%;
-  margin: 0.5rem 0;
   height: 6px;
   -webkit-appearance: none;
-  background: #e9ecef;
+  background: var(--border-color);
   border-radius: 3px;
   outline: none;
+  margin: 1rem 0;
 }
 
-.proficiency-slider input[type="range"]::-webkit-slider-thumb {
+.proficiency-input::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 18px;
   height: 18px;
-  background: #5e72e4;
+  background: var(--primary-color);
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.proficiency-slider input[type="range"]::-webkit-slider-thumb:hover {
+.proficiency-input::-webkit-slider-thumb:hover {
   transform: scale(1.1);
   box-shadow: 0 0 0 4px rgba(94, 114, 228, 0.1);
 }
@@ -504,14 +533,14 @@ export default {
 .proficiency-labels {
   display: flex;
   justify-content: space-between;
-  color: #666;
+  color: var(--text-muted);
   font-size: 0.875rem;
   margin-top: 0.5rem;
 }
 
 .proficiency-value {
   text-align: center;
-  color: #5e72e4;
+  color: var(--primary-color);
   font-weight: 600;
   margin-top: 0.5rem;
   font-size: 0.875rem;
