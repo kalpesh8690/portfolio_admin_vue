@@ -52,7 +52,9 @@ const actions = {
     commit('SET_ERROR', null)
     try {
       const response = await apis.SkillAPI.deleteSkill(id)
-      commit('DELETE_SKILL', id)
+      const resSkills = await apis.SkillAPI.getSkills()
+      commit('SET_SKILLS', resSkills.data.data)
+   
       return Promise.resolve(response)
     } catch (error) {
       commit('SET_ERROR', error.message || 'Failed to delete skill')

@@ -17,8 +17,8 @@ const SkillAPI = {
     return Repository.post(`${dir}` + ADD_SKILL, payload)
   },
 
-  deleteSkill(id) {
-    return Repository.post(`${dir}` + DELETE_SKILL + `/${id}`)
+  deleteSkill(payload) {
+    return Repository.post(`${dir}` + DELETE_SKILL, payload)
   },
 
   updateSkill(payload) {

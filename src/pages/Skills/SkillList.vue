@@ -37,7 +37,7 @@
                 <base-button type="info" size="sm" @click="$emit('edit-skill', skill, index)">
                   Edit
                 </base-button>
-                <base-button type="danger" size="sm" @click="confirmDelete(skill._id)">
+                <base-button type="danger" size="sm" @click="handleDeleteSkill(skill._id)">
                   Delete
                 </base-button>
               </div>
@@ -71,9 +71,43 @@ export default {
   },
   methods: {
     ...mapActions('skills', ['fetchSkills', 'deleteSkill']),
-    confirmDelete(id) {
-      if (confirm('Are you sure you want to delete this skill?')) {
-        this.deleteSkill(id)
+    async handleDeleteSkill(id) {
+      try {
+        const result = await this.$swal({
+          title: 'Delete Skill?',
+          text: 'Are you sure you want to delete this skill? This action cannot be undone.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#f5365c',
+          cancelButtonColor: '#8898aa',
+          confirmButtonText: 'Yes, delete it!',
+          cancelButtonText: 'Cancel',
+          reverseButtons: true,
+          showLoaderOnConfirm: true,
+          preConfirm: async () => {
+            try {
+              await this.$store.dispatch('skills/deleteSkill', {"_id":id})
+              return true
+            } catch (error) {
+              this.$swal.showValidationMessage(
+                `Failed to delete skill: ${error.message}`
+              )
+            }
+          }
+        })
+
+        if (result.isConfirmed) {
+         
+          this.$swal({
+            title: 'Deleted!',
+            text: 'Skill has been deleted successfully.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          })
+        }
+      } catch (error) {
+        console.error('Failed to delete skill:', error)
       }
     }
   },

@@ -42,9 +42,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import EditSkillForm from './Skills/EditSkillForm.vue'
 import SkillList from './Skills/SkillList.vue'
-import { skillsData } from '@/data/demoData'
 
 export default {
   name: 'skill-manager',
@@ -54,12 +54,14 @@ export default {
   },
   data() {
     return {
-      skillList: [],
+    
       currentSkill: null
     }
   },
   computed: {
+    ...mapState('skills', ['skillList', 'loading', 'error']),
     skillCount() {
+      
       return this.skillList.length
     },
     categoryCount() {
@@ -107,16 +109,10 @@ export default {
       localStorage.setItem('skillList', JSON.stringify(this.skillList))
     }
   },
-  created() {
-    const savedSkills = localStorage.getItem('skillList')
-    if (savedSkills) {
-      this.skillList = JSON.parse(savedSkills)
-    } else {
-      // Load demo data if no data exists
-      this.skillList = skillsData
-      this.saveToLocalStorage()
-    }
+  mounted(){
+    console.log(this.skillList,"skillList")
   }
+  
 }
 </script>
 

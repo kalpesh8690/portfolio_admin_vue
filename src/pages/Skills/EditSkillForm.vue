@@ -213,14 +213,25 @@ export default {
       isCategoryDropdownOpen: false,
       categorySearch: '',
       skillCategories: [
-        { value: 'Programming', icon: 'fas fa-code', label: 'Programming' },
-        { value: 'Design', icon: 'fas fa-paint-brush', label: 'Design' },
-        { value: 'Database', icon: 'fas fa-database', label: 'Database' },
+        // Web Development
+        { value: 'Frontend', icon: 'fas fa-code', label: 'Frontend Development' },
+        { value: 'Backend', icon: 'fas fa-server', label: 'Backend Development' },
+        { value: 'Full Stack', icon: 'fas fa-layer-group', label: 'Full Stack Development' },
+        { value: 'UI/UX', icon: 'fas fa-paint-brush', label: 'UI/UX Design' },
+        { value: 'Web Design', icon: 'fas fa-palette', label: 'Web Design' },
+        { value: 'Web Security', icon: 'fas fa-shield-alt', label: 'Web Security' },
+        { value: 'Web Performance', icon: 'fas fa-tachometer-alt', label: 'Web Performance' },
+        { value: 'Web Testing', icon: 'fas fa-vial', label: 'Web Testing' },
         { value: 'DevOps', icon: 'fas fa-server', label: 'DevOps' },
-        { value: 'Mobile', icon: 'fas fa-mobile-alt', label: 'Mobile' },
+        { value: 'AWS', icon: 'fab fa-aws', label: 'AWS' },
+        { value: 'Azure', icon: 'fab fa-microsoft', label: 'Azure' },
+        { value: 'GCP', icon: 'fab fa-google', label: 'Google Cloud' },
+        { value: 'Docker', icon: 'fab fa-docker', label: 'Docker' },
+        { value: 'Kubernetes', icon: 'fas fa-dharmachakra', label: 'Kubernetes' },
+        { value: 'CI/CD', icon: 'fas fa-sync', label: 'CI/CD' },
+        { value: 'Database', icon: 'fas fa-database', label: 'Database' },
         { value: 'Cloud', icon: 'fas fa-cloud', label: 'Cloud' },
         { value: 'Security', icon: 'fas fa-shield-alt', label: 'Security' },
-        { value: 'Tools', icon: 'fas fa-tools', label: 'Tools' },
         { value: 'Networking', icon: 'fas fa-network-wired', label: 'Networking' },
         { value: 'AI/ML', icon: 'fas fa-robot', label: 'AI/ML' },
         { value: 'Analytics', icon: 'fas fa-chart-line', label: 'Analytics' },
@@ -228,7 +239,10 @@ export default {
         { value: 'Photography', icon: 'fas fa-camera', label: 'Photography' },
         { value: 'Video', icon: 'fas fa-video', label: 'Video' },
         { value: 'Languages', icon: 'fas fa-language', label: 'Languages' },
-        { value: 'Other', icon: 'fas fa-ellipsis-h', label: 'Other' }
+        { value: 'Design', icon: 'fas fa-palette', label: 'Design' },
+        
+        
+       
       ],
       themeColors: [
         '#5e72e4', // Primary
