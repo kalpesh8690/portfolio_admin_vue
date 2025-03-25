@@ -15,6 +15,16 @@ module.exports = defineConfig({
     compress: true
   },
 
+  // Configure the title
+  chainWebpack: config => {
+    config
+      .plugin('html')
+      .tap(args => {
+        args[0].title = 'Portfolio Admin Dashboard'
+        return args
+      })
+  },
+
   // Chunk optimization configuration
   chainWebpack: config => {
     config.optimization.splitChunks({
