@@ -18,7 +18,7 @@
             </div>
           </div>
           <div slot="footer" class="stats">
-            <i class="tim-icons icon-watch-time"></i> {{ totalYearsExperience }}
+            <i class="tim-icons icon-watch-time"></i> {{ currentPosition ? formatDuration(currentPosition) : '0 years' }}
           </div>
         </base-card>
       </div>
@@ -39,7 +39,7 @@
             </div>
           </div>
           <div slot="footer" class="stats">
-            <i class="tim-icons icon-trophy"></i> {{ latestCertificate }}
+            <i class="tim-icons icon-trophy"></i> {{ latestCertificates.length ? latestCertificates[0].name : 'No certificates' }}
           </div>
         </base-card>
       </div>
@@ -60,7 +60,7 @@
             </div>
           </div>
           <div slot="footer" class="stats">
-            <i class="tim-icons icon-bulb-63"></i> {{ activeProjectCount }} Active Projects
+            <i class="tim-icons icon-bulb-63"></i> {{ latestProjects.length }} Latest Projects
           </div>
         </base-card>
       </div>
@@ -81,7 +81,7 @@
             </div>
           </div>
           <div slot="footer" class="stats">
-            <i class="tim-icons icon-chart-bar-32"></i> {{ topSkillCategory }}
+            <i class="tim-icons icon-chart-bar-32"></i> {{ topSkills.length ? topSkills[0] : 'No skills' }}
           </div>
         </base-card>
       </div>
@@ -97,27 +97,27 @@
               <thead>
                 <tr>
                   <th>Project</th>
-                  <th>Type</th>
+                  <th>Category</th>
                   <th>Status</th>
                   <th>Technologies</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="project in latestProjects" :key="project.projectName">
+                <tr v-for="project in latestProjects" :key="project._id">
                   <td>
-                    <div class="project-name">{{ project.projectName }}</div>
+                    <div class="project-name">{{ project.title }}</div>
                   </td>
                   <td>
-                    <span class="project-type">{{ project.projectType }}</span>
+                    <span class="project-type">{{ project.category }}</span>
                   </td>
                   <td>
-                    <span class="status-badge" :class="{ 'status-active': !project.endDate, 'status-completed': project.endDate }">
-                      {{ project.endDate ? 'Completed' : 'Active' }}
+                    <span class="status-badge" :class="{ 'status-active': project.status === 'published', 'status-completed': project.status === 'completed' }">
+                      {{ project.status }}
                     </span>
                   </td>
                   <td>
                     <div class="tech-stack">
-                      {{ project.technologies }}
+                      {{ project.technologies.join(', ') }}
                     </div>
                   </td>
                 </tr>
@@ -131,7 +131,7 @@
         <base-card>
           <h4 slot="header" class="card-title">Latest Certificates</h4>
           <div class="certificate-list">
-            <div v-for="cert in latestCertificates" :key="cert.name" class="certificate-item">
+            <div v-for="cert in latestCertificates" :key="cert._id" class="certificate-item">
               <div class="cert-name">{{ cert.name }}</div>
               <div class="cert-issuer">{{ cert.issuer }}</div>
               <div class="cert-date">{{ formatDate(cert.issueDate) }}</div>
@@ -148,10 +148,10 @@
           <h4 slot="header" class="card-title">Current Position</h4>
           <div v-if="currentPosition" class="current-position">
             <h5>{{ currentPosition.position }}</h5>
-            <p class="company">{{ currentPosition.companyName }}</p>
+            <p class="company">{{ currentPosition.company }}</p>
             <p class="location">{{ currentPosition.location }}</p>
             <p class="duration">{{ formatDuration(currentPosition) }}</p>
-            <p class="technologies">{{ currentPosition.technologies }}</p>
+            <p class="technologies">{{ currentPosition.technologies.join(', ') }}</p>
           </div>
         </base-card>
       </div>
@@ -160,15 +160,9 @@
         <base-card>
           <h4 slot="header" class="card-title">Top Skills</h4>
           <div class="skill-list">
-            <div v-for="skill in topSkills" :key="skill.skillName" class="skill-item">
+            <div v-for="skill in topSkills" :key="skill" class="skill-item">
               <div class="skill-info">
-                <span class="skill-name">{{ skill.skillName }}</span>
-                <span class="skill-category">{{ skill.category }}</span>
-              </div>
-              <div class="skill-proficiency">
-                <div class="progress">
-                  <div class="progress-bar" :style="{ width: (skill.proficiency * 20) + '%' }"></div>
-                </div>
+                <span class="skill-name">{{ skill }}</span>
               </div>
             </div>
           </div>
@@ -182,7 +176,7 @@
         <base-card>
           <h4 slot="header" class="card-title">Latest Education</h4>
           <div class="education-timeline">
-            <div v-for="edu in educationByDate" :key="edu.institution" class="education-item">
+            <div v-for="edu in educationByDate" :key="edu._id" class="education-item">
               <div class="education-content">
                 <div class="education-header">
                   <div class="degree-info">
@@ -212,7 +206,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import NotificationCenter from '@/components/NotificationCenter.vue'
 
 export default {
@@ -221,53 +215,66 @@ export default {
     NotificationCenter
   },
   computed: {
-    ...mapGetters('experience', [
-      'experienceCount',
-      'totalYearsExperience',
-      'currentPosition'
+    ...mapState('master', [
+      'dashboard',
+      'loading',
+      'error'
     ]),
-    ...mapGetters('certificates', [
-      'certificateCount',
-      'latestCertificate',
-      'latestCertificates'
-    ]),
-    ...mapGetters('projects', [
-      'projectCount',
-      'activeProjectCount',
-      'latestProjects'
-    ]),
-    ...mapGetters('skills', [
-      'skillCount',
-      'topSkillCategory',
-      'topSkills'
-    ]),
-    ...mapGetters('education', [
-      'educationCount',
-      'latestEducation',
-      'educationByDate'
-    ])
+    experienceCount() {
+      return this.dashboard.experiences
+    },
+    certificateCount() {
+      return this.dashboard.certificates
+    },
+    projectCount() {
+      return this.dashboard.projects
+    },
+    skillCount() {
+      return this.dashboard.skills
+    },
+    latestProjects() {
+      return this.dashboard.latestProjects
+    },
+    latestCertificates() {
+      return this.dashboard.latestCertificates
+    },
+    currentPosition() {
+      return this.dashboard.latestExperiences[0]
+    },
+    topSkills() {
+      return this.dashboard.topSkills
+    },
+    educationByDate() {
+      return this.dashboard.latestEducation
+    },
+    totalYearsExperience() {
+      return this.dashboard.totalYearsExperience
+    },
+    latestCertificate() {
+      return this.dashboard.latestCertificate
+    },
+    activeProjectCount() {
+      return this.dashboard.activeProjectCount
+    },
+    topSkillCategory() {
+      return this.dashboard.topSkillCategory
+    }
   },
   methods: {
-    formatDate(dateString) {
-      if (!dateString) return ''
-      const date = new Date(dateString)
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long'
-      })
+    ...mapActions('master', ['fetchDashboard']),
+    formatDate(date) {
+      return new Date(date).toLocaleDateString()
     },
-    formatDuration(experience) {
-      if (!experience) return ''
-      const start = new Date(experience.startDate)
-      const end = experience.endDate ? new Date(experience.endDate) : new Date()
-      const months = (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth()
-      const years = Math.floor(months / 12)
-      const remainingMonths = months % 12
-      
-      if (years === 0) return `${remainingMonths} months`
-      if (remainingMonths === 0) return `${years} years`
-      return `${years} years ${remainingMonths} months`
+    formatDuration(position) {
+      const start = new Date(position.startDate)
+      const end = position.endDate ? new Date(position.endDate) : new Date()
+      const years = end.getFullYear() - start.getFullYear()
+      const months = end.getMonth() - start.getMonth()
+      return `${years} years ${months} months`
     }
+  },
+  created() {
+    this.fetchDashboard()
   }
 }
 </script>
@@ -294,12 +301,12 @@ export default {
 }
 
 .card-stats .card-category {
-  color: #9A9A9A;
+  color: var(--text-color-secondary);
   font-size: 0.9em;
 }
 
 .card-stats .stats {
-  color: #9A9A9A;
+  color: var(--text-color-secondary);
   font-weight: 300;
 }
 
@@ -319,7 +326,7 @@ export default {
 
 .certificate-item {
   padding: 15px 0;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .certificate-item:last-child {
@@ -328,17 +335,17 @@ export default {
 
 .cert-name {
   font-weight: 600;
-  color: #333;
+  color: var(--text-color);
 }
 
 .cert-issuer {
-  color: #666;
+  color: var(--text-color-secondary);
   font-size: 0.9em;
   margin: 5px 0;
 }
 
 .cert-date {
-  color: #9A9A9A;
+  color: var(--text-color-secondary);
   font-size: 0.85em;
 }
 
@@ -347,25 +354,25 @@ export default {
 }
 
 .current-position h5 {
-  color: #333;
+  color: var(--text-color);
   margin-bottom: 10px;
 }
 
 .current-position .company {
   font-weight: 600;
-  color: #666;
+  color: var(--text-color-secondary);
   margin: 5px 0;
 }
 
 .current-position .location,
 .current-position .duration {
-  color: #9A9A9A;
+  color: var(--text-color-secondary);
   font-size: 0.9em;
   margin: 5px 0;
 }
 
 .current-position .technologies {
-  color: #666;
+  color: var(--text-color-secondary);
   margin-top: 10px;
   font-size: 0.9em;
 }
@@ -385,12 +392,12 @@ export default {
 }
 
 .skill-name {
-  color: #333;
+  color: var(--text-color);
   font-weight: 600;
 }
 
 .skill-category {
-  color: #9A9A9A;
+  color: var(--text-color-secondary);
   font-size: 0.9em;
 }
 
@@ -400,31 +407,31 @@ export default {
 
 .progress {
   height: 4px;
-  background-color: #e9ecef;
+  background-color: var(--bg-color-secondary);
   border-radius: 2px;
   overflow: hidden;
 }
 
 .progress-bar {
-  background-color: #e14eca;
+  background-color: var(--primary-color);
   height: 100%;
   transition: width 0.3s ease;
 }
 
 .icon-primary {
-  color: #e14eca;
+  color: var(--primary-color);
 }
 
 .icon-success {
-  color: #00f2c3;
+  color: var(--success-color);
 }
 
 .icon-warning {
-  color: #ff8d72;
+  color: var(--warning-color);
 }
 
 .icon-info {
-  color: #1d8cf8;
+  color: var(--info-color);
 }
 
 .education-timeline {
@@ -573,11 +580,11 @@ export default {
 }
 
 .modern-table-wrapper {
-  background: rgba(32, 32, 32, 0.9);
+  background: var(--card-bg);
   border-radius: 12px;
   padding: 1.5rem;
   margin: 1rem 0;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow);
 }
 
 .modern-table {
@@ -591,13 +598,13 @@ export default {
     }
     
     th {
-      color: #9A9A9A;
+      color: var(--text-color-secondary);
       font-weight: 400;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       font-size: 0.75rem;
       padding: 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid var(--border-color);
       text-align: left;
     }
   }
@@ -607,14 +614,14 @@ export default {
       transition: background-color 0.2s ease;
       
       &:hover {
-        background: rgba(255, 255, 255, 0.05);
+        background: var(--hover-bg);
       }
     }
     
     td {
       padding: 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      color: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-color);
       font-size: 0.875rem;
       
       &:first-child {
@@ -625,12 +632,12 @@ export default {
 }
 
 .project-name {
-  color: #e14eca;
+  color: var(--primary-color);
   font-weight: 600;
 }
 
 .project-type {
-  color: #9A9A9A;
+  color: var(--text-color-secondary);
   font-size: 0.875rem;
 }
 
@@ -644,18 +651,18 @@ export default {
   letter-spacing: 0.03em;
   
   &.status-active {
-    background: rgba(0, 242, 195, 0.1);
-    color: #00f2c3;
+    background: var(--success-color-light);
+    color: var(--success-color);
   }
   
   &.status-completed {
-    background: rgba(29, 140, 248, 0.1);
-    color: #1d8cf8;
+    background: var(--info-color-light);
+    color: var(--info-color);
   }
 }
 
 .tech-stack {
-  color: #9A9A9A;
+  color: var(--text-color-secondary);
   font-size: 0.875rem;
   line-height: 1.4;
 }

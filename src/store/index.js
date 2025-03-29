@@ -32,13 +32,13 @@ const store = new Vuex.Store({
 })
 
 // Initialize data loading
-store.dispatch('experience/loadExperience')
-store.dispatch('certificates/loadCertificates')
-store.dispatch('projects/loadProjects')
-store.dispatch('skills/loadSkills')
-store.dispatch('education/loadEducation')
-store.dispatch('profile/loadProfile')
+store.dispatch('experience/fetchExperiences')
+store.dispatch('certificates/fetchCertificates')
+store.dispatch('projects/fetchProjects')
+store.dispatch('skills/fetchSkills')
+store.dispatch('education/fetchEducation')
+// store.dispatch('profile/fetchProfile')
 store.dispatch('theme/initTheme')
-store.dispatch('master/fetchDashbord')
+store.dispatch('master/fetchDashboard')
 
 export default store 

@@ -1,6 +1,6 @@
 export default {
-  SET_DASHBORD(state, data) {
-    state.dashbord = data
+  SET_DASHBOARD(state, data) {
+    state.dashboard = data
   },
   SET_LOADING(state, loading) {
     state.loading = loading
