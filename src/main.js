@@ -31,9 +31,15 @@ new Vue({
     // Initialize socket connection when the app starts
     // You should replace this with your actual JWT token
     const token = localStorage.getItem('token'); // or however you store your JWT token
+    
     if (token) {
       this.$socket.connect(token);
     }
+  },
+  mounted() {
+    const user = localStorage.getItem('user');
+    const userData = JSON.parse(user);
+    socketService.joinRoom(userData._id);
   },
   beforeDestroy() {
     // Clean up socket connection when the app is destroyed

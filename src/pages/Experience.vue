@@ -44,7 +44,7 @@
 <script>
 import EditExperienceForm from './Experience/EditExperienceForm.vue';
 import ExperienceList from './Experience/ExperienceList.vue';
-import { experienceData } from '@/data/demoData';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'experience-page',
@@ -52,12 +52,8 @@ export default {
     EditExperienceForm,
     ExperienceList
   },
-  data() {
-    return {
-      experienceList: []
-    };
-  },
   computed: {
+    ...mapState('experience', ['experienceList', 'loading', 'error']),
     experienceCount() {
       return this.experienceList.length;
     },
@@ -103,39 +99,49 @@ export default {
     }
   },
   methods: {
-    saveExperience({ experience, index }) {
-      if (index !== -1) {
-        // Update existing experience
-        this.experienceList[index] = experience;
-      } else {
-        // Add new experience at the beginning of the list
-        this.experienceList.unshift(experience);
+    ...mapActions('experience', [
+      'fetchExperiences',
+      'createExperience',
+      'updateExperience',
+      'deleteExperience'
+    ]),
+    async saveExperience(experience, isEditing) {
+      try {
+        if (isEditing) {
+          // Update existing experience
+          await this.updateExperience(experience);
+        } else {
+          // Add new experience
+          await this.createExperience(experience);
+        }
+        // Refresh the list
+        await this.fetchExperiences();
+      } catch (error) {
+        console.error('Error saving experience:', error);
+        // You might want to show an error notification here
       }
-      this.saveToLocalStorage();
     },
     editExperience(experience, index) {
       this.$refs.experienceForm.editExperience(experience, index);
     },
-    deleteExperience(index) {
-      this.experienceList.splice(index, 1);
-      this.saveToLocalStorage();
+    async deleteExperience(index) {
+      try {
+        const experience = this.experienceList[index];
+        await this.deleteExperience(experience._id);
+        // Refresh the list
+        await this.fetchExperiences();
+      } catch (error) {
+        console.error('Error deleting experience:', error);
+        // You might want to show an error notification here
+      }
     },
     cancelEdit() {
       // Handle cancel if needed
-    },
-    saveToLocalStorage() {
-      localStorage.setItem('experienceList', JSON.stringify(this.experienceList));
     }
   },
   created() {
-    const savedExperience = localStorage.getItem('experienceList');
-    if (savedExperience) {
-      this.experienceList = JSON.parse(savedExperience);
-    } else {
-      // Load demo data if no data exists
-      this.experienceList = experienceData;
-      this.saveToLocalStorage();
-    }
+    // Fetch experiences when component is created
+    this.fetchExperiences();
   }
 };
 </script>

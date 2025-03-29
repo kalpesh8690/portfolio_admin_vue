@@ -31,10 +31,14 @@
 
     <div class="row mt-4">
       <div class="col-12">
+        <div v-if="certificateList.length === 0" class="text-center py-5">
+          <h4>No records found</h4>
+        </div>
         <certificate-list
+          v-else
           :certificate-list="certificateList"
           @edit-certificate="editCertificate"
-          @delete-certificate="deleteCertificate"
+          @delete-certificate="handleDeleteCertificate"
         />
       </div>
     </div>
@@ -44,7 +48,7 @@
 <script>
 import EditCertificateForm from './Certificates/EditCertificateForm.vue'
 import CertificateList from './Certificates/CertificateList.vue'
-import { certificatesData } from '@/data/demoData'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'certificate-manager',
@@ -54,11 +58,12 @@ export default {
   },
   data() {
     return {
-      certificateList: [],
       currentCertificate: null
     }
   },
   computed: {
+    ...mapState('certificates', ['certificateList']),
+   
     certificateCount() {
       return this.certificateList.length
     },
@@ -76,39 +81,40 @@ export default {
     }
   },
   methods: {
-    saveCertificate({ certificate, index }) {
-      if (index !== -1) {
-        // Update existing certificate
-        this.certificateList.splice(index, 1, certificate)
-      } else {
-        // Add new certificate
-        this.certificateList.push(certificate)
+    ...mapActions('certificates', ['fetchCertificates', 'createCertificate', 'updateCertificate', 'deleteCertificate']),
+    async saveCertificate({ certificate, index }) {
+      try {
+        if (index !== -1) {
+          // Update existing certificate
+          await this.updateCertificate(certificate)
+        } else {
+          // Add new certificate
+          await this.createCertificate(certificate)
+        }
+        this.currentCertificate = null
+      } catch (error) {
+        console.error('Failed to save certificate:', error)
       }
-      this.currentCertificate = null
-      this.saveToLocalStorage()
     },
     editCertificate(certificate, index) {
       this.currentCertificate = { ...certificate, index }
     },
-    deleteCertificate(index) {
-      this.certificateList.splice(index, 1)
-      this.saveToLocalStorage()
+    async handleDeleteCertificate(id) {
+      try {
+        await this.deleteCertificate(id)
+      } catch (error) {
+        console.error('Failed to delete certificate:', error)
+      }
     },
     cancelEdit() {
       this.currentCertificate = null
-    },
-    saveToLocalStorage() {
-      localStorage.setItem('certificateList', JSON.stringify(this.certificateList))
     }
   },
-  created() {
-    const savedCertificates = localStorage.getItem('certificateList')
-    if (savedCertificates) {
-      this.certificateList = JSON.parse(savedCertificates)
-    } else {
-      // Load demo data if no data exists
-      this.certificateList = certificatesData
-      this.saveToLocalStorage()
+  async created() {
+    try {
+      await this.fetchCertificates()
+    } catch (error) {
+      console.error('Failed to fetch certificates:', error)
     }
   }
 }

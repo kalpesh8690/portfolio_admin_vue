@@ -35,24 +35,41 @@
         <div class="notifications-container">
           <button class="icon-button" @click="toggleNotifications">
             <i class="fas fa-bell"></i>
-            <span class="notification-badge" v-if="unreadNotifications">3</span>
+            <span class="notification-badge" v-if="unreadCount > 0">{{ unreadCount }}</span>
           </button>
           <div class="notifications-dropdown" v-if="showNotifications">
             <div class="notifications-header">
               <h3>Notifications</h3>
-              <button class="mark-all-read" @click="markAllAsRead">Mark all as read</button>
+              <button class="mark-all-read" @click="markAllAsRead" v-if="unreadCount > 0">Mark all as read</button>
             </div>
-            <div class="notifications-list">
-              <div v-for="notification in notifications" :key="notification.id" 
-                   class="notification-item" :class="{ unread: !notification.read }">
-                <div class="notification-icon">
-                  <i :class="notification.icon"></i>
-                </div>
-                <div class="notification-content">
-                  <p>{{ notification.message }}</p>
-                  <span class="notification-time">{{ notification.time }}</span>
-                </div>
+            <div class="notifications-list" @scroll="handleScroll">
+              <div v-if="loading && page === 1" class="loading-state">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading notifications...</p>
               </div>
+              <template v-else>
+                <div v-for="notification in notifications" :key="notification.id" 
+                     class="notification-item" :class="{ unread: !notification.read }"
+                     @click="markAsRead(notification.id)">
+                  <div class="notification-icon">
+                    <i :class="notification.icon"></i>
+                  </div>
+                  <div class="notification-content">
+                    <p>{{ notification.message }}</p>
+                    <span class="notification-time">{{ notification.time }}</span>
+                  </div>
+                  <button class="remove-notification" @click.stop="removeNotification(notification.id)">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <div v-if="notifications.length === 0" class="no-notifications">
+                  <i class="fas fa-bell-slash"></i>
+                  <p>No notifications</p>
+                </div>
+                <div v-if="loading && page > 1" class="loading-more">
+                  <i class="fas fa-spinner fa-spin"></i>
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -110,6 +127,8 @@
 <script>
 import SearchDialog from '@/components/SearchDialog.vue';
 import { mapActions, mapGetters, mapState } from 'vuex';
+import notificationService from '@/services/notificationService';
+import socketService from '@/services/socket';
 
 export default {
   name: 'TopNavbar',
@@ -138,6 +157,9 @@ export default {
     },
     userEmail() {
       return this.user.email
+    },
+    unreadCount() {
+      return this.notifications.filter(n => !n.read).length;
     }
   },
   data() {
@@ -145,40 +167,37 @@ export default {
       showSearchDialog: false,
       showNotifications: false,
       showUserMenu: false,
-      unreadNotifications: true,
-      notifications: [
-        {
-          id: 1,
-          message: 'New project created',
-          time: '5 minutes ago',
-          icon: 'fas fa-folder-plus',
-          read: false
-        },
-        {
-          id: 2,
-          message: 'Task completed',
-          time: '1 hour ago',
-          icon: 'fas fa-check-circle',
-          read: false
-        },
-        {
-          id: 3,
-          message: 'New comment on project',
-          time: '2 hours ago',
-          icon: 'fas fa-comment',
-          read: true
-        }
-      ],
-      userRole: 'Administrator'
+      notifications: [],
+      loading: false,
+      page: 1,
+      hasMore: true,
+      notificationSound: null,
+      isNotificationSoundEnabled: true
     }
   },
-  mounted() {
-    // Add keyboard shortcut listener
-    window.addEventListener('keydown', this.handleKeyPress);
+  async created() {
+    // Initialize notification sound
+    
+    // Connect to socket service
+    // const token = localStorage.getItem('token');
+    // if (token) {
+    //   socketService.connect(token);
+      
+    // }
+    
+    // Subscribe to socket events
+    socketService.socket.on('notification', this.handleNewNotification);
+    
+    // Fetch initial notifications
+    await this.fetchNotifications();
   },
   beforeDestroy() {
     // Remove keyboard shortcut listener
     window.removeEventListener('keydown', this.handleKeyPress);
+    // Unsubscribe from socket events
+    if (socketService.socket) {
+      socketService.socket.off('notification', this.handleNewNotification);
+    }
   },
   methods: {
     ...mapActions('theme', ['toggleTheme']),
@@ -194,20 +213,105 @@ export default {
     toggleNotifications() {
       this.showNotifications = !this.showNotifications;
       this.showUserMenu = false;
+      if (this.showNotifications && this.hasMore) {
+        this.fetchNotifications();
+      }
     },
     toggleUserMenu() {
       this.showUserMenu = !this.showUserMenu;
       this.showNotifications = false;
     },
-    markAllAsRead() {
-      this.notifications.forEach(notification => {
-        notification.read = true;
+    async fetchNotifications() {
+      
+      if (this.loading || !this.hasMore) return;
+      
+      try {
+        this.loading = true;
+        const response = await notificationService.getNotifications(this.page);
+        const newNotifications = response.notifications;
+        
+        if (this.page === 1) {
+          this.notifications = newNotifications;
+        } else {
+          this.notifications = [...this.notifications, ...newNotifications];
+        }
+        
+        this.hasMore = newNotifications.length === response.limit;
+        this.page++;
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+        this.$toast.error('Failed to load notifications');
+      } finally {
+        this.loading = false;
+      }
+    },
+    async markAllAsRead() {
+      try {
+        await notificationService.markAllAsRead();
+        this.notifications = this.notifications.map(n => ({ ...n, read: true }));
+        this.$toast.success('All notifications marked as read');
+      } catch (error) {
+        console.error('Error marking all notifications as read:', error);
+        this.$toast.error('Failed to mark notifications as read');
+      }
+    },
+    async markAsRead(notificationId) {
+      try {
+        await notificationService.markAsRead(notificationId);
+        const notification = this.notifications.find(n => n.id === notificationId);
+        if (notification) {
+          notification.read = true;
+        }
+      } catch (error) {
+        console.error('Error marking notification as read:', error);
+        this.$toast.error('Failed to mark notification as read');
+      }
+    },
+    removeNotification(notificationId) {
+      this.notifications = this.notifications.filter(n => n.id !== notificationId);
+    },
+    handleNewNotification(notification) {
+      // Add new notification to the list
+      this.notifications.unshift({
+        ...notification,
+        read: false,
+        time: 'Just now'
       });
-      this.unreadNotifications = false;
+
+      // Play notification sound if enabled and window is not focused
+      if (this.isNotificationSoundEnabled && !document.hasFocus()) {
+        this.playNotificationSound();
+      }
+
+      // Show toast notification
+      this.$toast.info(notification.message, {
+        position: 'top-right',
+        timeout: 5000,
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: false,
+        hideProgressBar: false,
+        closeButton: 'button',
+        icon: true,
+        rtl: false
+      });
+    },
+    playNotificationSound() {
+      if (this.notificationSound) {
+        this.notificationSound.currentTime = 0;
+        this.notificationSound.play().catch(error => {
+          console.error('Error playing notification sound:', error);
+        });
+      }
     },
     async handleLogout() {
       try {
         await this.logout();
+        // Disconnect socket before redirecting
+        socketService.disconnect();
         this.$router.push('/login');
       } catch (error) {
         console.error('Logout failed:', error);
@@ -217,7 +321,7 @@ export default {
       try {
         this.$router.push(page);
       } catch (error) {
-        console.error('Logout failed:', error);
+        console.error('Navigation failed:', error);
       }
     },
     handleKeyPress(event) {
@@ -225,6 +329,12 @@ export default {
       if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
         event.preventDefault(); // Prevent default browser behavior
         this.showSearchDialog = true;
+      }
+    },
+    handleScroll(event) {
+      const target = event.target;
+      if (target.scrollTop + target.clientHeight >= target.scrollHeight - 100) {
+        this.fetchNotifications();
       }
     }
   }
@@ -514,6 +624,38 @@ export default {
     max-height: 400px;
     overflow-y: auto;
     padding: 0.5rem;
+    position: relative;
+
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: var(--text-color-secondary);
+      text-align: center;
+
+      i {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.9375rem;
+      }
+    }
+
+    .loading-more {
+      display: flex;
+      justify-content: center;
+      padding: 1rem;
+      color: var(--text-color-secondary);
+
+      i {
+        font-size: 1.25rem;
+      }
+    }
 
     .notification-item {
       display: flex;
@@ -522,6 +664,8 @@ export default {
       border-radius: 12px;
       transition: all 0.3s ease;
       margin-bottom: 0.5rem;
+      cursor: pointer;
+      position: relative;
 
       &:hover {
         background-color: var(--bg-color-secondary);
@@ -552,6 +696,53 @@ export default {
           color: var(--text-color-secondary);
           margin-top: 0.25rem;
         }
+      }
+
+      .remove-notification {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: none;
+        border: none;
+        color: var(--text-color-secondary);
+        cursor: pointer;
+        padding: 0.25rem;
+        border-radius: 50%;
+        opacity: 0;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: var(--bg-color);
+          color: var(--danger-color);
+        }
+
+        i {
+          font-size: 0.875rem;
+        }
+      }
+
+      &:hover .remove-notification {
+        opacity: 1;
+      }
+    }
+
+    .no-notifications {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: var(--text-color-secondary);
+      text-align: center;
+
+      i {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.9375rem;
       }
     }
   }

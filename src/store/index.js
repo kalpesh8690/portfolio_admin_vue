@@ -9,6 +9,7 @@ import profile from './modules/profile'
 import search from './modules/search'
 import theme from './modules/theme'
 import auth from './modules/auth'
+import master from './modules/master'
 import createDemoDataPlugin from './plugins/demoDataPlugin'
 
 Vue.use(Vuex)
@@ -24,7 +25,8 @@ const store = new Vuex.Store({
     profile,
     search,
     theme,
-    auth
+    auth,
+    master
   },
   plugins: [createDemoDataPlugin()]
 })
@@ -37,5 +39,6 @@ store.dispatch('skills/loadSkills')
 store.dispatch('education/loadEducation')
 store.dispatch('profile/loadProfile')
 store.dispatch('theme/initTheme')
+store.dispatch('master/fetchDashbord')
 
 export default store 

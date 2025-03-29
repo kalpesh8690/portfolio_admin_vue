@@ -44,7 +44,7 @@
 <script>
 import EditProjectForm from './Projects/EditProjectForm.vue'
 import ProjectList from './Projects/ProjectList.vue'
-import { projectsData } from '@/data/demoData'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'project-manager',
@@ -54,11 +54,12 @@ export default {
   },
   data() {
     return {
-      projectList: [],
       currentProject: null
     }
   },
   computed: {
+    ...mapState('projects', ['projectList', 'loading', 'error']),
+    
     projectCount() {
       return this.projectList.length
     },
@@ -74,41 +75,40 @@ export default {
     }
   },
   methods: {
-    saveProject(project) {
-      const index = this.projectList.findIndex(p => p === this.currentProject)
-      if (index !== -1) {
-        // Update existing project
-        this.projectList.splice(index, 1, project)
-      } else {
-        // Add new project
-        this.projectList.push(project)
+    ...mapActions('projects', ['fetchproject', 'createproject', 'updateproject', 'deleteproject']),
+    async saveProject(project,isEditing) {
+      try {
+        if (isEditing) {
+          // Update existing project
+          await this.updateproject(project)
+        } else {
+          // Add new project
+          await this.createproject(project)
+        }
+        this.currentProject = null
+      } catch (error) {
+        console.error('Error saving project:', error)
+        // You might want to show an error message to the user here
       }
-      this.currentProject = null
-      this.saveToLocalStorage()
     },
     editProject(project) {
       this.currentProject = project
     },
-    deleteProject(index) {
-      this.projectList.splice(index, 1)
-      this.saveToLocalStorage()
+    async deleteProject(index) {
+      try {
+        const projectToDelete = this.projectList[index]
+        await this.deleteproject(projectToDelete.id)
+      } catch (error) {
+        console.error('Error deleting project:', error)
+        // You might want to show an error message to the user here
+      }
     },
     cancelEdit() {
       this.currentProject = null
-    },
-    saveToLocalStorage() {
-      localStorage.setItem('projectList', JSON.stringify(this.projectList))
     }
   },
   created() {
-    const savedProjects = localStorage.getItem('projectList')
-    if (savedProjects) {
-      this.projectList = JSON.parse(savedProjects)
-    } else {
-      // Load demo data if no data exists
-      this.projectList = projectsData
-      this.saveToLocalStorage()
-    }
+    this.fetchproject()
   }
 }
 </script>

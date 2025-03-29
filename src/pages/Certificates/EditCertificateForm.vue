@@ -34,24 +34,22 @@
           </base-input>
         </div>
         <div class="col-md-6 pl-md-1">
-          <base-input
+          <base-datepicker
             label="Issue Date"
-            type="date"
             v-model="certificateForm.issueDate"
             required
           >
-          </base-input>
+          </base-datepicker>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6 pr-md-1">
-          <base-input
+          <base-datepicker
             label="Expiry Date"
-            type="date"
             v-model="certificateForm.expiryDate"
           >
-          </base-input>
+          </base-datepicker>
         </div>
         <div class="col-md-6 pl-md-1">
           <base-input

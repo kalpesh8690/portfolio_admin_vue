@@ -9,6 +9,8 @@
         ></edit-education-form>
         <education-list
           :education-list="educationList"
+          :loading="loading"
+          :error="error"
           @edit-education="editEducation"
           @delete-education="deleteEducation"
         ></education-list>
@@ -39,7 +41,7 @@
 <script>
 import EditEducationForm from './Education/EditEducationForm.vue';
 import EducationList from './Education/EducationList.vue';
-import { educationData } from '@/data/demoData';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'education-page',
@@ -47,12 +49,8 @@ export default {
     EditEducationForm,
     EducationList
   },
-  data() {
-    return {
-      educationList: []
-    };
-  },
   computed: {
+    ...mapState('education', ['educationList', 'loading', 'error']),
     educationCount() {
       return this.educationList.length;
     },
@@ -61,48 +59,37 @@ export default {
     }
   },
   methods: {
-    saveEducation({ education, index }) {
-      if (index !== -1) {
-        // Update existing education
-        this.educationList[index] = education;
-      } else {
-        // Add new education at the beginning of the list
-        this.educationList.unshift(education);
+    ...mapActions('education', ['fetchEducation', 'createEducation', 'updateEducation', 'deleteEducation']),
+    async saveEducation({ education, index }) {
+      try {
+        if (index !== -1) {
+          // Update existing education
+          await this.updateEducation(education);
+        } else {
+          // Add new education
+          await this.createEducation(education);
+        }
+        this.$refs.educationForm.resetForm();
+      } catch (error) {
+        console.error('Error saving education:', error);
       }
-      this.saveToLocalStorage();
     },
     editEducation(education, index) {
       this.$refs.educationForm.editEducation(education, index);
     },
-    deleteEducation(index) {
-      this.educationList.splice(index, 1);
-      this.saveToLocalStorage();
+    async handleDeleteEducation(id) {
+      try {
+        await this.deleteEducation(id);
+      } catch (error) {
+        console.error('Error deleting education:', error);
+      }
     },
     cancelEdit() {
-      // Handle cancel if needed
-    },
-    saveToLocalStorage() {
-      localStorage.setItem('educationList', JSON.stringify(this.educationList));
+      this.$refs.educationForm.resetForm();
     }
   },
   created() {
-    const savedEducation = localStorage.getItem('educationList')
-    if (savedEducation) {
-      this.educationList = JSON.parse(savedEducation)
-    } else {
-      // Load demo data if no data exists
-      this.educationList = educationData
-      this.saveToLocalStorage()
-    }
-  },
-  watch: {
-    // Watch for changes in localStorage
-    '$root.$data.educationList': {
-      handler(newValue) {
-        this.educationList = newValue;
-      },
-      deep: true
-    }
+    this.fetchEducation();
   }
 };
 </script>

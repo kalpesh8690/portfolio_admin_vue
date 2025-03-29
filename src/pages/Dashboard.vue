@@ -207,14 +207,19 @@
         </base-card>
       </div>
     </div>
+    <notification-center />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import NotificationCenter from '@/components/NotificationCenter.vue'
 
 export default {
   name: 'portfolio-dashboard',
+  components: {
+    NotificationCenter
+  },
   computed: {
     ...mapGetters('experience', [
       'experienceCount',
