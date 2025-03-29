@@ -6,7 +6,7 @@ const actions = {
     commit('SET_ERROR', null)
     try {
       const response = await apis.EducationAPI.getEducation(params)
-      console.log(response)
+      
       commit('SET_EDUCATION', response.data.data)
       return Promise.resolve(response)
     } catch (error) {

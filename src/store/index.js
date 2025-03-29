@@ -34,7 +34,7 @@ const store = new Vuex.Store({
 // Initialize data loading
 store.dispatch('experience/fetchExperiences')
 store.dispatch('certificates/fetchCertificates')
-store.dispatch('projects/fetchProjects')
+store.dispatch('projects/fetchproject')
 store.dispatch('skills/fetchSkills')
 store.dispatch('education/fetchEducation')
 // store.dispatch('profile/fetchProfile')

@@ -6,7 +6,7 @@ const actions = {
     commit('SET_ERROR', null)
     try {
       const response = await apis.ProjectAPI.getProjects(params)
-      console.log(response)
+      
       commit('SET_PROJECTS', response.data.data)
       return Promise.resolve(response)
     } catch (error) {

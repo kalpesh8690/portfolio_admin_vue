@@ -6,7 +6,7 @@ const actions = {
     commit('SET_ERROR', null)
     try {
       const response = await apis.DashbordAPI.getDashbord(params)
-      console.log(response)
+      
       commit('SET_DASHBOARD', response.data.data)
       return Promise.resolve(response)
     } catch (error) {
